@@ -1,5 +1,6 @@
 Changelog for Alias (v1.0.0-SNAPSHOT)
 
+2012-02-05 17:49:26 +0000    final implementation (that took a while) (James Richardson)
 2012-02-05 15:19:42 +0000    fix bug with command registration and name lookup (James Richardson)
 2012-02-05 15:14:27 +0000    added check command (James Richardson)
 2012-02-05 14:19:16 +0000    Implements ManyToMany relationship (James Richardson)

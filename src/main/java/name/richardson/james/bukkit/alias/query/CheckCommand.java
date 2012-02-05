@@ -56,7 +56,7 @@ public class CheckCommand extends PlayerCommand {
       }
     } else if (arguments.containsKey("address")) {
       final InetAddress address = (InetAddress) arguments.get("address");
-      List<PlayerNameRecord> records = this.handler.lookupIPAddress(address.toString());
+      List<PlayerNameRecord> records = this.handler.lookupIPAddress(address.getHostAddress());
       sender.sendMessage(String.format(ChatColor.LIGHT_PURPLE + "%s has %d associated player names:", address, records.size()));
       final DateFormat dateFormat = new SimpleDateFormat("k:m MMM d y");
       for (PlayerNameRecord record : records) {
@@ -70,8 +70,6 @@ public class CheckCommand extends PlayerCommand {
   
   public Map<String, Object> parseArguments(final List<String> arguments) throws CommandArgumentException {
     final Map<String, Object> map = new HashMap<String, Object>();
-    
-    if (arguments.isEmpty()) throw new CommandArgumentException("You must specify a player name or an address!", "If the player is online, you can type part of the name.");
   
     for (String argument : arguments) {
       if (argument.startsWith("p:")) {
@@ -88,6 +86,7 @@ public class CheckCommand extends PlayerCommand {
       }
     }
     
+    if (map.isEmpty()) throw new CommandArgumentException("You must specify a player name or an address!", "If the player is online, you can type part of the name.");
     return map;
   }
 

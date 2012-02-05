@@ -22,7 +22,7 @@ public class PlayerListener implements Listener {
   @EventHandler(priority = EventPriority.LOWEST)
   public void onPlayerLogin(PlayerJoinEvent event) {
     String playerName = event.getPlayer().getName();
-    InetAddress address = event.getPlayer().getAddress().getAddress();
+    String address = event.getPlayer().getAddress().getAddress().getHostAddress();
     PlayerNameRecord playerNameRecord = this.getPlayerNameRecord(playerName);
     InetAddressRecord inetAddressRecord = this.getInetAddressRecord(address.toString()); 
   
