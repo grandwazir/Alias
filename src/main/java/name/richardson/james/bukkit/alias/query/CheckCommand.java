@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import org.bukkit.permissions.PermissionDefault;
 
 import name.richardson.james.bukkit.alias.Alias;
 import name.richardson.james.bukkit.alias.AliasHandler;
+import name.richardson.james.bukkit.alias.DatabaseHandler;
 import name.richardson.james.bukkit.alias.InetAddressRecord;
 import name.richardson.james.bukkit.alias.PlayerNameRecord;
 import name.richardson.james.bukkit.util.Plugin;
@@ -34,11 +36,11 @@ public class CheckCommand extends PlayerCommand {
   
   public static final Permission PERMISSION = new Permission("alias.check", CheckCommand.PERMISSION_DESCRIPTION, PermissionDefault.OP);
   
-  private AliasHandler handler;
+  private DatabaseHandler database;
   
   public CheckCommand(Alias plugin) {
     super(plugin, CheckCommand.NAME, CheckCommand.DESCRIPTION, CheckCommand.USAGE, CheckCommand.PERMISSION_DESCRIPTION, PERMISSION);
-    this.handler = plugin.getHandler(CheckCommand.class);
+    this.database = plugin.getDatabaseHandler();
   }
 
   @Override
@@ -46,7 +48,7 @@ public class CheckCommand extends PlayerCommand {
     
     if (arguments.containsKey("player")) {
       final String playerName = (String) arguments.get("player");
-      List<InetAddressRecord> records = this.handler.lookupPlayerName(playerName);
+      List<InetAddressRecord> records = this.lookupPlayerName(playerName);
       sender.sendMessage(String.format(ChatColor.LIGHT_PURPLE + "%s has used %d IP addresses:", playerName, records.size()));
       final DateFormat dateFormat = new SimpleDateFormat("k:m MMM d y");
       for (InetAddressRecord record : records) {
@@ -56,14 +58,16 @@ public class CheckCommand extends PlayerCommand {
       }
     } else if (arguments.containsKey("address")) {
       final InetAddress address = (InetAddress) arguments.get("address");
-      List<PlayerNameRecord> records = this.handler.lookupIPAddress(address.getHostAddress());
+      List<PlayerNameRecord> records = this.lookupIPAddress(address.getHostAddress());
       sender.sendMessage(String.format(ChatColor.LIGHT_PURPLE + "%s has %d associated player names:", address, records.size()));
-      final DateFormat dateFormat = new SimpleDateFormat("k:m MMM d y");
+      final DateFormat dateFormat = new SimpleDateFormat("k:m MMM d y/as ch");
       for (PlayerNameRecord record : records) {
         final Date date = new Date(record.getLastSeen());
         final String lastSeenString = dateFormat.format(date);
         sender.sendMessage(String.format(ChatColor.YELLOW + "- %s (%s)", record.getPlayerName(), lastSeenString));
       }
+    } else {
+      throw new CommandArgumentException("You must specify a player name or an address!", "If the player is online, you can type part of the name.");
     }
     
   }
@@ -86,8 +90,23 @@ public class CheckCommand extends PlayerCommand {
       }
     }
     
+    
     if (map.isEmpty()) throw new CommandArgumentException("You must specify a player name or an address!", "If the player is online, you can type part of the name.");
     return map;
+  }
+  
+  private List<PlayerNameRecord> lookupIPAddress(String address) {
+    InetAddressRecord record = InetAddressRecord.findByAddress(database, address);
+    if (record != null) return record.getPlayerNames();
+    logger.debug("No PlayerNameRecords found, returning empty list");
+    return new LinkedList<PlayerNameRecord>();
+  }
+
+  private List<InetAddressRecord> lookupPlayerName(String playerName) {
+    PlayerNameRecord record = PlayerNameRecord.findByName(database, playerName);
+    if (record != null) return record.getAddresses();
+    logger.debug("No InetAddressRecords found, returning empty list");
+    return new LinkedList<InetAddressRecord>();
   }
 
 }

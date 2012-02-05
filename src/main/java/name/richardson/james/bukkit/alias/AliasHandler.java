@@ -1,7 +1,10 @@
 package name.richardson.james.bukkit.alias;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.net.InetAddress;
+import java.util.Set;
+import java.util.HashSet;
+
+import org.bukkit.entity.Player;
 
 import name.richardson.james.bukkit.util.Handler;
 
@@ -14,18 +17,27 @@ public class AliasHandler extends Handler implements AliasAPI {
     this.plugin = plugin;
   }
 
-  public List<PlayerNameRecord> lookupIPAddress(String address) {
-    InetAddressRecord record = InetAddressRecord.findByAddress(this.plugin.getDatabaseHandler(), address);
-    if (record != null) return record.getPlayerNames();
-    logger.debug("No PlayerNameRecords found, returning empty list");
-    return new LinkedList<PlayerNameRecord>();
+  public Set<String> getPlayersNames(InetAddress ip) {
+    Set<String> set = new HashSet<String>();
+    InetAddressRecord records = InetAddressRecord.findByAddress(plugin.getDatabaseHandler(), ip.getHostAddress());
+    for (PlayerNameRecord record : records.getPlayerNames()) {
+      set.add(record.getPlayerName());
+    }
+    return set;
   }
 
-  public List<InetAddressRecord> lookupPlayerName(String playerName) {
-    PlayerNameRecord record = PlayerNameRecord.findByName(this.plugin.getDatabaseHandler(), playerName);
-    if (record != null) return record.getAddresses();
-    logger.debug("No InetAddressRecords found, returning empty list");
-    return new LinkedList<InetAddressRecord>();
+  public Set<String> getIPAddresses(String playerName) {
+    Set<String> set = new HashSet<String>();
+    PlayerNameRecord records = PlayerNameRecord.findByName(plugin.getDatabaseHandler(), playerName);
+    for (InetAddressRecord record : records.getAddresses()) {
+      set.add(record.getAddress());
+    }
+    return set;
   }
+  
+  public Set<String> getIPAddresses(Player player) {
+    return this.getIPAddresses(player.getName());
+  }
+
 
 }
