@@ -1,12 +1,11 @@
 package name.richardson.james.bukkit.alias;
 
-import java.net.InetAddress;
-import java.util.Set;
+import java.util.List;
 
 public interface AliasAPI {
 
-  public Set<String> lookupIPAddress(InetAddress ip);
+  public List<PlayerNameRecord> lookupIPAddress(String address);
   
-  public Set<InetAddress> lookupPlayerName(String playerName);
+  public List<InetAddressRecord> lookupPlayerName(String playerName);
   
 }

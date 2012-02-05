@@ -8,14 +8,19 @@ import javax.persistence.PersistenceException;
 
 import org.bukkit.entity.Player;
 
+import name.richardson.james.bukkit.alias.query.CheckCommand;
+import name.richardson.james.bukkit.banhammer.ban.BanCommand;
 import name.richardson.james.bukkit.util.Logger;
 import name.richardson.james.bukkit.util.Plugin;
+import name.richardson.james.bukkit.util.command.CommandManager;
+import name.richardson.james.bukkit.util.command.PlayerCommand;
 
 public class Alias extends Plugin {
 
   private PlayerListener listener;
   private name.richardson.james.bukkit.alias.DatabaseHandler database;
   private AliasConfiguration configuration;
+  private CommandManager cm;
 
   public void onDisable() {
     this.getServer().getScheduler().cancelTasks(this);
@@ -30,6 +35,8 @@ public class Alias extends Plugin {
       this.setupDatabase();
       // load the worlds
       this.registerListeners();
+      this.setPermission();
+      this.registerCommands();
     } catch (final IOException exception) {
       this.logger.severe("Unable to load configuration!");
       exception.printStackTrace();
@@ -62,6 +69,16 @@ public class Alias extends Plugin {
       this.installDDL();
     }
     this.database = new DatabaseHandler(this.getDatabase());
+  }
+  
+  public AliasHandler getHandler(Class<?> parentClass) {
+    return new AliasHandler(parentClass, this);
+  }
+  
+  private void registerCommands() {
+    this.cm = new CommandManager(this.getDescription());
+    this.getCommand("as").setExecutor(this.cm);
+    final PlayerCommand checkCommand = new CheckCommand(this);
   }
   
   @Override

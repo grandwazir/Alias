@@ -36,9 +36,9 @@ public class InetAddressRecord {
   @NotNull
   private long lastSeen;
   
-  public static InetAddressRecord findByAddress(Database database, InetAddress address, boolean create) {
-    logger.debug(String.format("Attempting to return InetAddressRecord matching the address %s.", address.toString()));
-    InetAddressRecord record = database.getEbeanServer().find(InetAddressRecord.class).where().eq("address", address.toString()).findUnique();
+  public static InetAddressRecord findByAddress(Database database, String address, boolean create) {
+    logger.debug(String.format("Attempting to return InetAddressRecord matching the address %s.", address));
+    InetAddressRecord record = database.getEbeanServer().find(InetAddressRecord.class).where().eq("address", address).findUnique();
     if (record == null && create == true) {
       logger.debug(String.format("Creating new InetAddressRecord for address %s.", address.toString()));
       record = new InetAddressRecord();
