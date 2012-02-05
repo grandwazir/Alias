@@ -1,0 +1,5 @@
+name: Alias
+main: name.richardson.james.bukkit.alias.Alias
+version: ${project.version}
+database: true
+
