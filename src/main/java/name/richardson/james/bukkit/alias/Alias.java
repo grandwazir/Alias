@@ -6,10 +6,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import org.bukkit.entity.Player;
-
 import name.richardson.james.bukkit.alias.query.CheckCommand;
-import name.richardson.james.bukkit.banhammer.ban.BanCommand;
 import name.richardson.james.bukkit.util.Logger;
 import name.richardson.james.bukkit.util.Plugin;
 import name.richardson.james.bukkit.util.command.CommandManager;
@@ -78,7 +75,7 @@ public class Alias extends Plugin {
   private void registerCommands() {
     this.cm = new CommandManager(this.getDescription());
     this.getCommand("as").setExecutor(this.cm);
-    final PlayerCommand checkCommand = new CheckCommand(this);
+    cm.registerCommand("check", new CheckCommand(this));
   }
   
   @Override

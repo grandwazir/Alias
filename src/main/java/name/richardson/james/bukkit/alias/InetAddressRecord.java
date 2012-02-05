@@ -38,7 +38,7 @@ public class InetAddressRecord {
   
   public static InetAddressRecord findByAddress(Database database, String address, boolean create) {
     logger.debug(String.format("Attempting to return InetAddressRecord matching the address %s.", address));
-    InetAddressRecord record = database.getEbeanServer().find(InetAddressRecord.class).where().eq("address", address).findUnique();
+    InetAddressRecord record = database.getEbeanServer().find(InetAddressRecord.class).where().ieq("address", address).findUnique();
     if (record == null && create == true) {
       logger.debug(String.format("Creating new InetAddressRecord for address %s.", address.toString()));
       record = new InetAddressRecord();
