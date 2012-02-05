@@ -1,5 +1,6 @@
 name: Alias
 main: name.richardson.james.bukkit.alias.Alias
+description: Easily track and log your player's IP addresses
 version: ${project.version}
 database: true
 commands:
