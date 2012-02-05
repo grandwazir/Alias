@@ -14,18 +14,18 @@ public class PlayerListener implements Listener {
   private Database database;
   
   public PlayerListener(Alias alias) {
-    this.database = this.getDatabaseHandler();
+    this.database = alias.getDatabaseHandler();
   }
 
   @EventHandler(priority = EventPriority.LOWEST)
   public void onPlayerLogin(PlayerJoinEvent event) {
     final String playerName = event.getPlayer().getName();
     final InetAddress address = event.getPlayer().getAddress().getAddress();
-    final PlayerNameRecord playerNameRecord = PlayerNameRecord.findByName(playerName, true);
-    final InetAddressRecord inetAddressRecord = InetAddressRecord.findByAddress(address, true);
+    final PlayerNameRecord playerNameRecord = PlayerNameRecord.findByName(database, playerName, true);
+    final InetAddressRecord inetAddressRecord = InetAddressRecord.findByAddress(database, address, true);
     playerNameRecord.updateLastSeen();
     inetAddressRecord.updateLastSeen();
-    playerNameRecord.getInetAddresses().add(inetAddressRecord);
+    playerNameRecord.getAddresses().add(inetAddressRecord);
     database.save(playerNameRecord);
   }
   
