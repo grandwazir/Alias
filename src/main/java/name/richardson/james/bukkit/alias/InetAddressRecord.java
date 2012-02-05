@@ -1,12 +1,10 @@
 package name.richardson.james.bukkit.alias;
 
-import java.net.InetAddress;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
@@ -24,7 +22,7 @@ public class InetAddressRecord {
 
   private static Logger logger = new Logger(InetAddressRecord.class);
 
-  @ManyToMany(cascade=CascadeType.ALL)
+  @ManyToMany(mappedBy="addresses")
   private List<PlayerNameRecord> playerNames;
   
   @Id
@@ -36,21 +34,14 @@ public class InetAddressRecord {
   @NotNull
   private long lastSeen;
   
-  public static InetAddressRecord findByAddress(Database database, String address, boolean create) {
+  public static InetAddressRecord findByAddress(Database database, String address) {
     logger.debug(String.format("Attempting to return InetAddressRecord matching the address %s.", address));
-    InetAddressRecord record = database.getEbeanServer().find(InetAddressRecord.class).where().ieq("address", address).findUnique();
-    if (record == null && create == true) {
-      logger.debug(String.format("Creating new InetAddressRecord for address %s.", address.toString()));
-      record = new InetAddressRecord();
-      record.setAddress(address.toString());
-      record.updateLastSeen();
-      database.save(record);
-    }
+    InetAddressRecord record = database.getEbeanServer().find(InetAddressRecord.class).where().eq("address", address).findUnique();
     return record;
   }
   
   public void updateLastSeen() {
-    this.setLastSeen(System.currentTimeMillis());
+    this.lastSeen = System.currentTimeMillis();
   }
 
   public String getAddress() {
@@ -70,10 +61,6 @@ public class InetAddressRecord {
   }
 
   @ManyToMany(targetEntity=PlayerNameRecord.class) 
-  @JoinTable (name="alias_players_addresses", 
-      joinColumns= @JoinColumn(name="player_id", referencedColumnName="id"),
-      inverseJoinColumns=@JoinColumn(name="address_id", referencedColumnName="id")
-  )
   public List<PlayerNameRecord> getPlayerNames() {
     return playerNames;
   }
@@ -89,5 +76,14 @@ public class InetAddressRecord {
   public void setId(int id) {
     this.id = id;
   }
-  
+
+  public static boolean isAddressKnown(Database database, String address) {
+    InetAddressRecord record = database.getEbeanServer().find(InetAddressRecord.class).where().ieq("address", address).findUnique();
+    if (record != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }

@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -28,20 +30,21 @@ public class PlayerNameRecord {
   @NotNull
   private long lastSeen;
   
-  @ManyToMany(cascade=CascadeType.ALL)
-  private List<InetAddressRecord> addresses;
+  public List<InetAddressRecord> addresses;
 
-  public static PlayerNameRecord findByName(Database database, String playerName, boolean create) {
+  public static PlayerNameRecord findByName(Database database, String playerName) {
     logger.debug(String.format("Attempting to return PlayerNameRecord matching the name %s.", playerName));
     PlayerNameRecord record = database.getEbeanServer().find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
-    if (record == null && create == true) {
-      logger.debug(String.format("Creating new PlayerNameRecord for name %s.", playerName));
-      record = new PlayerNameRecord();
-      record.setPlayerName(playerName);
-      record.updateLastSeen();
-      database.save(record);
-    }
     return record;
+  }
+  
+  public static boolean isPlayerKnown(Database database, String playerName) {
+    PlayerNameRecord record = database.getEbeanServer().find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
+    if (record != null) {
+      return true;
+    } else {
+      return false;
+    }
   }
   
   
@@ -54,9 +57,11 @@ public class PlayerNameRecord {
   }
   
   public void updateLastSeen() {
-    this.setLastSeen(System.currentTimeMillis());
+    this.lastSeen = System.currentTimeMillis();
   }
 
+  @ManyToMany(cascade=CascadeType.ALL)
+  @JoinTable (name="alias_players_addresses")
   public List<InetAddressRecord> getAddresses() {
     return addresses;
   }
