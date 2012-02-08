@@ -64,7 +64,7 @@ public class CheckCommand extends PlayerCommand {
       final String playerName = (String) arguments.get("player");
       final List<InetAddressRecord> records = this.lookupPlayerName(playerName);
       sender.sendMessage(String.format(ChatColor.LIGHT_PURPLE + "%s has used %d IP addresses:", playerName, records.size()));
-      final DateFormat dateFormat = new SimpleDateFormat("k:m MMM d y");
+      final DateFormat dateFormat = new SimpleDateFormat("k:m MMM d yyyy");
       for (final InetAddressRecord record : records) {
         final Date date = new Date(record.getLastSeen());
         final String lastSeenString = dateFormat.format(date);
@@ -74,7 +74,7 @@ public class CheckCommand extends PlayerCommand {
       final InetAddress address = (InetAddress) arguments.get("address");
       final List<PlayerNameRecord> records = this.lookupIPAddress(address.getHostAddress());
       sender.sendMessage(String.format(ChatColor.LIGHT_PURPLE + "%s has %d associated player names:", address, records.size()));
-      final DateFormat dateFormat = new SimpleDateFormat("k:m MMM d y");
+      final DateFormat dateFormat = new SimpleDateFormat("k:m MMM d yyyy");
       for (final PlayerNameRecord record : records) {
         final Date date = new Date(record.getLastSeen());
         final String lastSeenString = dateFormat.format(date);
