@@ -74,7 +74,7 @@ public class CheckCommand extends PlayerCommand {
       final InetAddress address = (InetAddress) arguments.get("address");
       final List<PlayerNameRecord> records = this.lookupIPAddress(address.getHostAddress());
       sender.sendMessage(String.format(ChatColor.LIGHT_PURPLE + "%s has %d associated player names:", address, records.size()));
-      final DateFormat dateFormat = new SimpleDateFormat("k:m MMM d y/as ch");
+      final DateFormat dateFormat = new SimpleDateFormat("k:m MMM d y");
       for (final PlayerNameRecord record : records) {
         final Date date = new Date(record.getLastSeen());
         final String lastSeenString = dateFormat.format(date);
