@@ -1,5 +1,6 @@
 Changelog for Alias (v1.0.2-SNAPSHOT)
 
+2012-02-10 21:16:20 +0000    added additional check if used on an unsupported database. (James Richardson)
 2012-02-10 21:02:52 +0000    changed headers (James Richardson)
 2012-02-10 21:01:45 +0000    updated README (James Richardson)
 

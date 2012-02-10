@@ -55,6 +55,7 @@ public class CheckCommand extends PlayerCommand {
   public CheckCommand(final Alias plugin) {
     super(plugin, CheckCommand.NAME, CheckCommand.DESCRIPTION, CheckCommand.USAGE, CheckCommand.PERMISSION_DESCRIPTION, PERMISSION);
     this.database = plugin.getDatabaseHandler();
+    this.logger.setPrefix("[Alias] ");
   }
 
   @Override
@@ -70,6 +71,7 @@ public class CheckCommand extends PlayerCommand {
         final String lastSeenString = dateFormat.format(date);
         sender.sendMessage(String.format(ChatColor.YELLOW + "- %s (%s)", record.getAddress(), lastSeenString));
       }
+      logger.info(String.format("%s checked an alias: %s", sender.getName(), playerName));
     } else if (arguments.containsKey("address")) {
       final InetAddress address = (InetAddress) arguments.get("address");
       final List<PlayerNameRecord> records = this.lookupIPAddress(address.getHostAddress());
@@ -80,6 +82,7 @@ public class CheckCommand extends PlayerCommand {
         final String lastSeenString = dateFormat.format(date);
         sender.sendMessage(String.format(ChatColor.YELLOW + "- %s (%s)", record.getPlayerName(), lastSeenString));
       }
+      logger.info(String.format("%s checked an alias: %s", sender.getName(), address.getHostAddress()));
     } else {
       throw new CommandArgumentException("You must specify a player name or an address!", "If the player is online, you can type part of the name.");
     }
