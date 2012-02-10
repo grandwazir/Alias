@@ -28,9 +28,7 @@ Alternatively [older versions](http://repository.james.richardson.name/releases/
 
 ## Configuration
 
-1. [Configure permissions](https://github.com/grandwazir/Alias/wiki/permissions) if necessary.
-
-### Documentation
+### Read the documentation
 
 All documentation for Alias is available on the [GitHub wiki](https://github.com/grandwazir/Alias/wiki), including [example usage](https://github.com/grandwazir/Alias/wiki/Instructions) and details on [how to configure](https://github.com/grandwazir/Alias/wiki/Permissions) the plugin. 
 
