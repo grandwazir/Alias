@@ -1,5 +1,14 @@
-Changelog for Alias (v1.0.0-SNAPSHOT)
+Changelog for Alias (v1.0.2-SNAPSHOT)
 
+
+v1.0.1
+2012-02-08 19:32:36 +0000    changed CheckCommand to use longer year format in output (James Richardson)
+2012-02-08 19:31:17 +0000    fix Format exception when checking an address with CheckCommand (James Richardson)
+2012-02-08 19:25:13 +0000    code cleanup, added copyright notices (James Richardson)
+
+v1.0.0
+2012-02-05 22:41:47 +0000    updated resources (James Richardson)
+2012-02-05 22:39:51 +0000    commit changelog (James Richardson)
 2012-02-05 22:38:42 +0000    pre-release preperation (James Richardson)
 2012-02-05 18:19:21 +0000    changed checkCommand to use getHostAddress rather than toString() (James Richardson)
 2012-02-05 17:49:26 +0000    final implementation (that took a while) (James Richardson)
