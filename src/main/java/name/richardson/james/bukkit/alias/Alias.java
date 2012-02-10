@@ -73,8 +73,18 @@ public class Alias extends Plugin {
     } catch (final IOException exception) {
       this.logger.severe("Unable to load configuration!");
       exception.printStackTrace();
-    } catch (final SQLException e) {
+    } catch (final PersistenceException e) {
+      if (e.getMessage().contains("SQLITE_ERROR")) {
+        this.logger.severe("Alias does not support SQLite as a database backend.");
+      } else {
+        this.logger.severe("Error initalising database!");
+        e.printStackTrace();
+      }
+      this.setEnabled(false);
+    } catch (SQLException e) {
+      this.logger.severe("Error initalising database!");
       e.printStackTrace();
+      this.setEnabled(false);
     } finally {
       if (!this.getServer().getPluginManager().isPluginEnabled(this)) {
         return;
