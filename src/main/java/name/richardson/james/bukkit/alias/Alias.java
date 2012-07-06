@@ -24,16 +24,11 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 
 import name.richardson.james.bukkit.alias.query.CheckCommand;
-import name.richardson.james.bukkit.util.Logger;
-import name.richardson.james.bukkit.util.Plugin;
-import name.richardson.james.bukkit.util.command.CommandManager;
+import name.richardson.james.bukkit.utilities.plugin.SkeletonPlugin;
 
-public class Alias extends Plugin {
+public class Alias extends SkeletonPlugin {
 
-  private PlayerListener listener;
-  private name.richardson.james.bukkit.alias.DatabaseHandler database;
-  private AliasConfiguration configuration;
-  private CommandManager cm;
+  private DatabaseHandler database;
 
   @Override
   public List<Class<?>> getDatabaseClasses() {
@@ -48,71 +43,38 @@ public class Alias extends Plugin {
     return new AliasHandler(parentClass, this);
   }
 
-  private void loadConfiguration() throws IOException {
-    this.configuration = new AliasConfiguration(this);
-    if (this.configuration.isDebugging()) {
-      Logger.enableDebugging(this.getDescription().getName().toLowerCase());
-    }
-  }
-
   public void onDisable() {
     this.getServer().getScheduler().cancelTasks(this);
     this.logger.info(String.format("%s is disabled!", this.getDescription().getName()));
   }
 
-  public void onEnable() {
-
-    try {
-      this.logger.setPrefix("[Alias] ");
-      this.loadConfiguration();
-      this.setupDatabase();
-      // load the worlds
-      this.registerListeners();
-      this.setPermission();
-      this.registerCommands();
-    } catch (final IOException exception) {
-      this.logger.severe("Unable to load configuration!");
-      exception.printStackTrace();
-    } catch (final PersistenceException e) {
-      if (e.getMessage().contains("SQLITE_ERROR")) {
-        this.logger.severe("Alias does not support SQLite as a database backend.");
-      } else {
-        this.logger.severe("Error initalising database!");
-        e.printStackTrace();
-      }
-      this.setEnabled(false);
-    } catch (SQLException e) {
-      this.logger.severe("Error initalising database!");
-      e.printStackTrace();
-      this.setEnabled(false);
-    } finally {
-      if (!this.getServer().getPluginManager().isPluginEnabled(this)) {
-        return;
-      }
-    }
-    this.logger.info(String.format("%s is enabled.", this.getDescription().getFullName()));
-
-  }
-
-  private void registerCommands() {
+  protected void registerCommands() {
     this.cm = new CommandManager(this.getDescription());
     this.getCommand("as").setExecutor(this.cm);
     this.cm.registerCommand("check", new CheckCommand(this));
   }
 
-  private void registerListeners() {
+  protected void registerEvents() {
     this.listener = new PlayerListener(this);
     this.getServer().getPluginManager().registerEvents(this.listener, this);
   }
 
-  private void setupDatabase() throws SQLException {
+  protected void setupPersistence() throws SQLException {
     try {
       this.getDatabase().find(PlayerNameRecord.class).findRowCount();
     } catch (final PersistenceException ex) {
       this.logger.warning("No database schema found. Generating a new one.");
       this.installDDL();
-    }
+    } 
     this.database = new DatabaseHandler(this.getDatabase());
+  }
+
+  public String getGroupID() {
+   return "name.richardson.james.bukkit";
+  }
+
+  public String getArtifactID() {
+    return "alias";
   }
 
 }
