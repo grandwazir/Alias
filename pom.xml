@@ -4,7 +4,7 @@
   <artifactId>alias</artifactId>
   <version>1.0.3-SNAPSHOT</version>
   <name>Alias</name>
-  <description>A plugin for bukkit to track players with mutliple user accounts</description>
+  <description>Search and track known alias of players.</description>
 
 <scm>
     <!-- Github repo -->
