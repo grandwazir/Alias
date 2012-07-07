@@ -22,75 +22,110 @@ import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 import name.richardson.james.bukkit.alias.Alias;
-import name.richardson.james.bukkit.alias.DatabaseHandler;
 import name.richardson.james.bukkit.alias.InetAddressRecord;
 import name.richardson.james.bukkit.alias.PlayerNameRecord;
-import name.richardson.james.bukkit.util.command.CommandArgumentException;
-import name.richardson.james.bukkit.util.command.CommandPermissionException;
-import name.richardson.james.bukkit.util.command.CommandUsageException;
-import name.richardson.james.bukkit.util.command.PlayerCommand;
+import name.richardson.james.bukkit.utilities.command.CommandArgumentException;
+import name.richardson.james.bukkit.utilities.command.CommandPermissionException;
+import name.richardson.james.bukkit.utilities.command.PluginCommand;
+import name.richardson.james.bukkit.utilities.internals.Logger;
+import name.richardson.james.bukkit.utilities.persistence.SQLStorage;
 
-public class CheckCommand extends PlayerCommand {
+public class CheckCommand extends PluginCommand {
+  
+  /* The style to use for outputting all dates */
+  private static final DateFormat DATE_FORMAT = new SimpleDateFormat("k:m MMM d yyyy");
 
-  public static final String NAME = "check";
-  public static final String DESCRIPTION = "Check the database for associated records.";
-  public static final String PERMISSION_DESCRIPTION = "Allow users to check the database for associated records.";
-  public static final String USAGE = "p:[player] | a:[address]";
+  /* The logger for this class */
+  private final Logger logger = new Logger(this.getClass());
+  
+  /* A reference to the bukkit server */
+  private final Server server;
 
-  public static final Permission PERMISSION = new Permission("alias.check", CheckCommand.PERMISSION_DESCRIPTION, PermissionDefault.OP);
+  /* A reference to the SQL storage for the plugin */
+  private final SQLStorage storage;
 
-  private final DatabaseHandler database;
+  /* The player who we are looking up in the database */
+  private OfflinePlayer player;
+  
+  /* The IP address that we are looking up in the database */
+  private InetAddress address;
 
   public CheckCommand(final Alias plugin) {
-    super(plugin, CheckCommand.NAME, CheckCommand.DESCRIPTION, CheckCommand.USAGE, CheckCommand.PERMISSION_DESCRIPTION, PERMISSION);
-    this.database = plugin.getDatabaseHandler();
-    this.logger.setPrefix("[Alias] ");
+    super(plugin);
+    this.storage = plugin.getSQLStorage();
+    this.server = plugin.getServer();
+    this.registerPermissions();
   }
 
-  @Override
-  public void execute(final CommandSender sender, final Map<String, Object> arguments) throws CommandArgumentException, CommandPermissionException, CommandUsageException {
+  public void execute(final CommandSender sender) throws CommandArgumentException, CommandPermissionException, CommandUsageException {
+    List<PlayerNameRecord> playerNames = new LinkedList<PlayerNameRecord>();
+    List<InetAddressRecord> addresses = new LinkedList<InetAddressRecord>();
 
-    if (arguments.containsKey("player")) {
-      final String playerName = (String) arguments.get("player");
-      final List<InetAddressRecord> records = this.lookupPlayerName(playerName);
-      sender.sendMessage(String.format(ChatColor.LIGHT_PURPLE + "%s has used %d IP addresses:", playerName, records.size()));
-      final DateFormat dateFormat = new SimpleDateFormat("k:m MMM d yyyy");
-      for (final InetAddressRecord record : records) {
-        final Date date = new Date(record.getLastSeen());
-        final String lastSeenString = dateFormat.format(date);
-        sender.sendMessage(String.format(ChatColor.YELLOW + "- %s (%s)", record.getAddress(), lastSeenString));
+    if (this.player != null) {
+      if (!sender.hasPermission(this.getPermission(2))) throw new CommandPermissionException(this.getMessage("checkcommand-cannot-search-by-player"), this.getPermission(2));
+      addresses = this.lookupPlayerName(this.player.getName());
+      for (final InetAddressRecord record : addresses) {
+        playerNames.addAll(record.getPlayerNames());
       }
-      logger.info(String.format("%s checked an alias: %s", sender.getName(), playerName));
-    } else if (arguments.containsKey("address")) {
-      final InetAddress address = (InetAddress) arguments.get("address");
-      final List<PlayerNameRecord> records = this.lookupIPAddress(address.getHostAddress());
-      sender.sendMessage(String.format(ChatColor.LIGHT_PURPLE + "%s has %d associated player names:", address, records.size()));
-      final DateFormat dateFormat = new SimpleDateFormat("k:m MMM d yyyy");
-      for (final PlayerNameRecord record : records) {
-        final Date date = new Date(record.getLastSeen());
-        final String lastSeenString = dateFormat.format(date);
-        sender.sendMessage(String.format(ChatColor.YELLOW + "- %s (%s)", record.getPlayerName(), lastSeenString));
-      }
-      logger.info(String.format("%s checked an alias: %s", sender.getName(), address.getHostAddress()));
     } else {
-      throw new CommandArgumentException("You must specify a player name or an address!", "If the player is online, you can type part of the name.");
+      if (!sender.hasPermission(this.getPermission(3))) throw new CommandPermissionException(this.getMessage("checkcommand-cannot-search-by-address"), this.getPermission(3));
+      playerNames = this.lookupIPAddress(this.address.toString());
+    }
+
+    sender.sendMessage(this.getFormattedPlayerHeader(this.player.getName(), playerNames.size()));
+    for (final PlayerNameRecord record : playerNames) {
+      final Date date = new Date(record.getLastSeen());
+      final String lastSeenString = CheckCommand.DATE_FORMAT.format(date);
+      final String[] arguments = { record.getPlayerName(), lastSeenString };
+      sender.sendMessage(this.getSimpleFormattedMessage("checkcommand-list-item", arguments));
     }
 
   }
 
+  public void parseArguments(final String[] arguments, final CommandSender sender) throws CommandArgumentException {
+    if (arguments.length == 0) {
+      throw new CommandArgumentException(this.getMessage("checkcommand-no-arguments"), this.getMessage("checkcommand-player-search-hint"));
+    }
+    
+    player = null;
+    address = null;
+
+    for (final String argument : arguments) {
+      if (argument.startsWith("p:")) {
+        this.player = this.matchPlayer(argument.replace("p:", ""));
+        break;
+      } else if (argument.startsWith("a:")) {
+        try {
+          this.address = InetAddress.getByName(argument.replace("a:", ""));
+        } catch (final UnknownHostException e) {
+          throw new CommandArgumentException(this.getMessage("checkcommand-specify-valid-address"), this.getMessage("checkcommand-specify-valid-address"));
+        }
+        break;
+      }
+    }
+
+  }
+
+  private String getFormattedPlayerHeader(final String name, final int size) {
+    final Object[] arguments = { size, name };
+    final double[] limits = { 0, 1, 2 };
+    final String[] formats = { this.getMessage("no-name").toLowerCase(), this.getMessage("one-name").toLowerCase(), this.getMessage("many-names") };
+    return this.getChoiceFormattedMessage("checkcommand-header", arguments, formats, limits);
+  }
+
   private List<PlayerNameRecord> lookupIPAddress(final String address) {
-    final InetAddressRecord record = InetAddressRecord.findByAddress(this.database, address);
+    final InetAddressRecord record = InetAddressRecord.findByAddress(this.storage, address);
     if (record != null) {
       return record.getPlayerNames();
     }
@@ -99,7 +134,7 @@ public class CheckCommand extends PlayerCommand {
   }
 
   private List<InetAddressRecord> lookupPlayerName(final String playerName) {
-    final PlayerNameRecord record = PlayerNameRecord.findByName(this.database, playerName);
+    final PlayerNameRecord record = PlayerNameRecord.findByName(this.storage, playerName);
     if (record != null) {
       return record.getAddresses();
     }
@@ -107,29 +142,34 @@ public class CheckCommand extends PlayerCommand {
     return new LinkedList<InetAddressRecord>();
   }
 
-  @Override
-  public Map<String, Object> parseArguments(final List<String> arguments) throws CommandArgumentException {
-    final Map<String, Object> map = new HashMap<String, Object>();
-
-    for (final String argument : arguments) {
-      if (argument.startsWith("p:")) {
-        map.put("player", argument.replace("p:", ""));
-        break;
-      } else if (argument.startsWith("a:")) {
-        try {
-          final InetAddress address = InetAddress.getByName(argument.replace("a:", ""));
-          map.put("address", address);
-        } catch (final UnknownHostException e) {
-          throw new CommandArgumentException("You must specify a valid IP address!", "Can be either a hostname or an actual address.");
-        }
-        break;
-      }
+  private OfflinePlayer matchPlayer(final String name) {
+    final List<Player> players = this.server.matchPlayer(name);
+    if (players.isEmpty()) {
+      return this.server.getOfflinePlayer(name);
+    } else {
+      return players.get(0);
     }
+  }
 
-    if (map.isEmpty()) {
-      throw new CommandArgumentException("You must specify a player name or an address!", "If the player is online, you can type part of the name.");
-    }
-    return map;
+  private void registerPermissions() {
+    final String prefix = this.plugin.getDescription().getName().toLowerCase() + ".";
+    final String wildcardDescription = String.format(this.plugin.getMessage("wildcard-permission-description"), this.getName());
+    // create the wildcard permission
+    final Permission wildcard = new Permission(prefix + this.getName() + ".*", wildcardDescription, PermissionDefault.OP);
+    wildcard.addParent(this.plugin.getRootPermission(), true);
+    this.addPermission(wildcard);
+    // create the base permission
+    final Permission base = new Permission(prefix + this.getName(), this.getMessage("checkcommand-permission-description"), PermissionDefault.OP);
+    base.addParent(this.plugin.getRootPermission(), true);
+    this.addPermission(base);
+    // create permission for searching by player name.
+    final Permission player = new Permission(prefix + this.getName() + ".players", this.getMessage("checkcommand-permission-player-description"), PermissionDefault.OP);
+    player.addParent(this.plugin.getRootPermission(), true);
+    this.addPermission(player);
+    // create permission for searching by ip address.
+    final Permission address = new Permission(prefix + this.getName() + ".addresses", this.getMessage("checkcommand-permission-address-description"), PermissionDefault.OP);
+    address.addParent(this.plugin.getRootPermission(), true);
+    this.addPermission(address);
   }
 
 }

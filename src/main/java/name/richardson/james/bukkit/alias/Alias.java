@@ -17,16 +17,13 @@
  ******************************************************************************/
 package name.richardson.james.bukkit.alias;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-
 import name.richardson.james.bukkit.alias.query.CheckCommand;
+import name.richardson.james.bukkit.utilities.command.CommandManager;
 import name.richardson.james.bukkit.utilities.persistence.SQLStorage;
 import name.richardson.james.bukkit.utilities.plugin.SkeletonPlugin;
 
@@ -62,14 +59,13 @@ public class Alias extends SkeletonPlugin {
   }
 
   protected void registerCommands() {
-    this.cm = new CommandManager(this.getDescription());
-    this.getCommand("as").setExecutor(this.cm);
-    this.cm.registerCommand("check", new CheckCommand(this));
+    CommandManager manager = new CommandManager(this);
+    this.getCommand("as").setExecutor(manager);
+    manager.addCommand(new CheckCommand(this));
   }
 
   protected void registerEvents() {
-    this.listener = new PlayerListener(this);
-    this.getServer().getPluginManager().registerEvents(this.listener, this);
+    this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
   }
 
   protected void setupPersistence() throws SQLException {
