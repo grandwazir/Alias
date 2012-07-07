@@ -45,7 +45,7 @@ import name.richardson.james.bukkit.utilities.persistence.SQLStorage;
 public class CheckCommand extends PluginCommand {
   
   /* The style to use for outputting all dates */
-  private static final DateFormat DATE_FORMAT = new SimpleDateFormat("k:m MMM d yyyy");
+  private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MMM d yyyy @ k:m");
 
   /* The logger for this class */
   private final Logger logger = new Logger(this.getClass());

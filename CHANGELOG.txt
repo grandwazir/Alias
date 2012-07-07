@@ -1,5 +1,9 @@
 Changelog for Alias (v1.1.0-SNAPSHOT)
 
+2012-07-07 04:17:16 +0100    fix registering permission to plugin root instead of command root (James Richardson)
+2012-07-07 04:16:47 +0100    clean up (James Richardson)
+2012-07-07 04:16:21 +0100    added delete command (James Richardson)
+2012-07-07 03:57:44 +0100    various bug fixes (James Richardson)
 2012-07-07 03:19:23 +0100    Missing generic (James Richardson)
 2012-07-07 03:19:02 +0100    Missing import (James Richardson)
 2012-07-07 03:18:37 +0100    update CheckCommand (James Richardson)
