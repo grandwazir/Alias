@@ -89,8 +89,8 @@ public class CheckCommand extends PluginCommand {
     }
 
     String playerName = (this.player != null) ? player.getName() : this.address.getHostAddress();
-    sender.sendMessage(this.getFormattedPlayerHeader(playerName, playerNames.size()));
     Set<PlayerNameRecord> uniquePlayerNames = new LinkedHashSet<PlayerNameRecord>(playerNames);
+    sender.sendMessage(this.getFormattedPlayerHeader(playerName, uniquePlayerNames.size()));
     for (final PlayerNameRecord record : uniquePlayerNames) {
       final Date date = new Date(record.getLastSeen());
       final String lastSeenString = CheckCommand.DATE_FORMAT.format(date);
