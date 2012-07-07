@@ -39,7 +39,7 @@ public class Alias extends SkeletonPlugin {
   }
 
   private static List<Class<?>> setDatabaseClasses() {
-    List list = new LinkedList<Class<?>>();
+    List<Class<?>> list = new LinkedList<Class<?>>();
     list.add(InetAddressRecord.class);
     list.add(PlayerNameRecord.class);
     return list;
