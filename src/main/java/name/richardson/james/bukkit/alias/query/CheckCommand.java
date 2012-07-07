@@ -164,15 +164,15 @@ public class CheckCommand extends PluginCommand {
     this.addPermission(wildcard);
     // create the base permission
     final Permission base = new Permission(prefix + this.getName(), this.getMessage("checkcommand-permission-description"), PermissionDefault.OP);
-    base.addParent(this.plugin.getRootPermission(), true);
+    base.addParent(wildcard, true);
     this.addPermission(base);
     // create permission for searching by player name.
     final Permission player = new Permission(prefix + this.getName() + ".players", this.getMessage("checkcommand-permission-player-description"), PermissionDefault.OP);
-    player.addParent(this.plugin.getRootPermission(), true);
+    player.addParent(wildcard, true);
     this.addPermission(player);
     // create permission for searching by ip address.
     final Permission address = new Permission(prefix + this.getName() + ".addresses", this.getMessage("checkcommand-permission-address-description"), PermissionDefault.OP);
-    address.addParent(this.plugin.getRootPermission(), true);
+    address.addParent(wildcard, true);
     this.addPermission(address);
   }
 
