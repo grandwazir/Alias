@@ -37,6 +37,7 @@ import name.richardson.james.bukkit.alias.InetAddressRecord;
 import name.richardson.james.bukkit.alias.PlayerNameRecord;
 import name.richardson.james.bukkit.utilities.command.CommandArgumentException;
 import name.richardson.james.bukkit.utilities.command.CommandPermissionException;
+import name.richardson.james.bukkit.utilities.command.CommandUsageException;
 import name.richardson.james.bukkit.utilities.command.PluginCommand;
 import name.richardson.james.bukkit.utilities.internals.Logger;
 import name.richardson.james.bukkit.utilities.persistence.SQLStorage;
