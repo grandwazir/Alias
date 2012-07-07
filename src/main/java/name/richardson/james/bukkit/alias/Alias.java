@@ -18,25 +18,38 @@
 package name.richardson.james.bukkit.alias;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 
 import name.richardson.james.bukkit.alias.query.CheckCommand;
+import name.richardson.james.bukkit.utilities.persistence.SQLStorage;
 import name.richardson.james.bukkit.utilities.plugin.SkeletonPlugin;
 
 public class Alias extends SkeletonPlugin {
 
-  private DatabaseHandler database;
+  private static final List<Class<?>> databaseClasses = Alias.setDatabaseClasses();
+  
+  private SQLStorage storage;
 
   @Override
   public List<Class<?>> getDatabaseClasses() {
-    return DatabaseHandler.getDatabaseClasses();
+    return Collections.unmodifiableList(Alias.databaseClasses);
   }
 
-  public DatabaseHandler getDatabaseHandler() {
-    return this.database;
+  private static List<Class<?>> setDatabaseClasses() {
+    List list = new LinkedList<Class<?>>();
+    list.add(InetAddressRecord.class);
+    list.add(PlayerNameRecord.class);
+    return list;
+  }
+
+  public SQLStorage getSQLStorage() {
+    return this.storage;
   }
 
   public AliasHandler getHandler(final Class<?> parentClass) {
@@ -61,13 +74,12 @@ public class Alias extends SkeletonPlugin {
 
   protected void setupPersistence() throws SQLException {
     try {
-      this.getDatabase().find(PlayerNameRecord.class).findRowCount();
-    } catch (final PersistenceException ex) {
-      this.logger.warning("No database schema found. Generating a new one.");
-      this.installDDL();
-    } 
-    this.database = new DatabaseHandler(this.getDatabase());
+      this.storage = new SQLStorage(this, this.getDatabaseClasses());
+    } catch (Exception e) {
+      throw new SQLException();
+    }
   }
+  
 
   public String getGroupID() {
    return "name.richardson.james.bukkit";
