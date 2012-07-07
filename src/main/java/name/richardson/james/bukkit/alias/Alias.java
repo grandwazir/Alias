@@ -30,59 +30,63 @@ import name.richardson.james.bukkit.utilities.plugin.SkeletonPlugin;
 public class Alias extends SkeletonPlugin {
 
   private static final List<Class<?>> databaseClasses = Alias.setDatabaseClasses();
-  
+
+  private static List<Class<?>> setDatabaseClasses() {
+    final List<Class<?>> list = new LinkedList<Class<?>>();
+    list.add(InetAddressRecord.class);
+    list.add(PlayerNameRecord.class);
+    return list;
+  }
+
   private SQLStorage storage;
+
+  public String getArtifactID() {
+    return "alias";
+  }
 
   @Override
   public List<Class<?>> getDatabaseClasses() {
     return Collections.unmodifiableList(Alias.databaseClasses);
   }
 
-  private static List<Class<?>> setDatabaseClasses() {
-    List<Class<?>> list = new LinkedList<Class<?>>();
-    list.add(InetAddressRecord.class);
-    list.add(PlayerNameRecord.class);
-    return list;
-  }
-
-  public SQLStorage getSQLStorage() {
-    return this.storage;
+  public String getGroupID() {
+    return "name.richardson.james.bukkit";
   }
 
   public AliasHandler getHandler(final Class<?> parentClass) {
     return new AliasHandler(parentClass, this);
   }
 
+  public SQLStorage getSQLStorage() {
+    return this.storage;
+  }
+
+  @Override
   public void onDisable() {
     this.getServer().getScheduler().cancelTasks(this);
     this.logger.info(String.format("%s is disabled!", this.getDescription().getName()));
   }
 
+  @Override
   protected void registerCommands() {
-    CommandManager manager = new CommandManager(this);
+    final CommandManager manager = new CommandManager(this);
     this.getCommand("as").setExecutor(manager);
     manager.addCommand(new CheckCommand(this));
   }
 
+  @Override
   protected void registerEvents() {
     this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
   }
 
+  @Override
   protected void setupPersistence() throws SQLException {
     try {
       this.storage = new SQLStorage(this, this.getDatabaseClasses());
-    } catch (Exception e) {
+    } catch (final Exception e) {
+      e.printStackTrace();
       throw new SQLException();
     }
-  }
-  
-
-  public String getGroupID() {
-   return "name.richardson.james.bukkit";
-  }
-
-  public String getArtifactID() {
-    return "alias";
   }
 
 }

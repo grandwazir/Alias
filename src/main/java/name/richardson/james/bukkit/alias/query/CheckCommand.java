@@ -72,6 +72,7 @@ public class CheckCommand extends PluginCommand {
   public void execute(final CommandSender sender) throws CommandArgumentException, CommandPermissionException, CommandUsageException {
     List<PlayerNameRecord> playerNames = new LinkedList<PlayerNameRecord>();
     List<InetAddressRecord> addresses = new LinkedList<InetAddressRecord>();
+    
 
     if (this.player != null) {
       if (!sender.hasPermission(this.getPermission(2))) throw new CommandPermissionException(this.getMessage("checkcommand-cannot-search-by-player"), this.getPermission(2));
@@ -81,10 +82,12 @@ public class CheckCommand extends PluginCommand {
       }
     } else {
       if (!sender.hasPermission(this.getPermission(3))) throw new CommandPermissionException(this.getMessage("checkcommand-cannot-search-by-address"), this.getPermission(3));
-      playerNames = this.lookupIPAddress(this.address.toString());
+      playerNames = this.lookupIPAddress(this.address.getHostAddress());
+      logger.info(String.valueOf(playerNames.size()));
     }
 
-    sender.sendMessage(this.getFormattedPlayerHeader(this.player.getName(), playerNames.size()));
+    String playerName = (this.player != null) ? player.getName() : this.address.getHostAddress();
+    sender.sendMessage(this.getFormattedPlayerHeader(playerName, playerNames.size()));
     for (final PlayerNameRecord record : playerNames) {
       final Date date = new Date(record.getLastSeen());
       final String lastSeenString = CheckCommand.DATE_FORMAT.format(date);
