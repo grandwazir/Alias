@@ -118,6 +118,10 @@ public class CheckCommand extends PluginCommand {
         break;
       }
     }
+    
+    if (player == null  && address == null) {
+      throw new CommandArgumentException(this.getMessage("checkcommand-no-arguments"), this.getMessage("checkcommand-player-search-hint"));
+    }
 
   }
 
