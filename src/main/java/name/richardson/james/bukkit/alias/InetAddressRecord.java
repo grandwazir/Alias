@@ -26,22 +26,22 @@ import javax.persistence.Table;
 
 import com.avaje.ebean.validation.NotNull;
 
-import name.richardson.james.bukkit.util.Database;
-import name.richardson.james.bukkit.util.Logger;
+import name.richardson.james.bukkit.utilities.internals.Logger;
+import name.richardson.james.bukkit.utilities.persistence.SQLStorage;
 
 @Entity
 @Table(name = "alias_addresses")
 public class InetAddressRecord {
 
-  private static Logger logger = new Logger(InetAddressRecord.class);
+  private final static Logger logger = new Logger(InetAddressRecord.class);
 
-  public static InetAddressRecord findByAddress(final Database database, final String address) {
+  public static InetAddressRecord findByAddress(final SQLStorage database, final String address) {
     logger.debug(String.format("Attempting to return InetAddressRecord matching the address %s.", address));
     final InetAddressRecord record = database.getEbeanServer().find(InetAddressRecord.class).where().eq("address", address).findUnique();
     return record;
   }
 
-  public static boolean isAddressKnown(final Database database, final String address) {
+  public static boolean isAddressKnown(final SQLStorage database, final String address) {
     final InetAddressRecord record = database.getEbeanServer().find(InetAddressRecord.class).where().ieq("address", address).findUnique();
     if (record != null) {
       return true;

@@ -28,22 +28,22 @@ import javax.persistence.Table;
 
 import com.avaje.ebean.validation.NotNull;
 
-import name.richardson.james.bukkit.util.Database;
-import name.richardson.james.bukkit.util.Logger;
+import name.richardson.james.bukkit.utilities.internals.Logger;
+import name.richardson.james.bukkit.utilities.persistence.SQLStorage;
 
 @Entity
 @Table(name = "alias_players")
 public class PlayerNameRecord {
 
-  private static Logger logger = new Logger(PlayerNameRecord.class);
+  private final static Logger logger = new Logger(PlayerNameRecord.class);
 
-  public static PlayerNameRecord findByName(final Database database, final String playerName) {
+  public static PlayerNameRecord findByName(final SQLStorage database, final String playerName) {
     logger.debug(String.format("Attempting to return PlayerNameRecord matching the name %s.", playerName));
     final PlayerNameRecord record = database.getEbeanServer().find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
     return record;
   }
 
-  public static boolean isPlayerKnown(final Database database, final String playerName) {
+  public static boolean isPlayerKnown(final SQLStorage database, final String playerName) {
     final PlayerNameRecord record = database.getEbeanServer().find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
     if (record != null) {
       return true;

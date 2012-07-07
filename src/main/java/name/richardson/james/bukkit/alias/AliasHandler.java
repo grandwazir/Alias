@@ -23,15 +23,19 @@ import java.util.Set;
 
 import org.bukkit.entity.Player;
 
-import name.richardson.james.bukkit.util.Handler;
+import name.richardson.james.bukkit.utilities.internals.Handler;
+import name.richardson.james.bukkit.utilities.internals.Logger;
+import name.richardson.james.bukkit.utilities.persistence.SQLStorage;
 
 public class AliasHandler extends Handler implements AliasAPI {
 
-  private final Alias plugin;
+  private final Logger logger = new Logger(this.getClass());
+  
+  private final SQLStorage database;
 
   public AliasHandler(final Class<?> parentClass, final Alias plugin) {
     super(parentClass);
-    this.plugin = plugin;
+    this.database = plugin.getSQLStorage();
   }
 
   public Set<String> getIPAddresses(final Player player) {
@@ -40,7 +44,7 @@ public class AliasHandler extends Handler implements AliasAPI {
 
   public Set<String> getIPAddresses(final String playerName) {
     final Set<String> set = new HashSet<String>();
-    final PlayerNameRecord records = PlayerNameRecord.findByName(this.plugin.getDatabaseHandler(), playerName);
+    final PlayerNameRecord records = PlayerNameRecord.findByName(database, playerName);
     for (final InetAddressRecord record : records.getAddresses()) {
       set.add(record.getAddress());
     }
@@ -49,11 +53,51 @@ public class AliasHandler extends Handler implements AliasAPI {
 
   public Set<String> getPlayersNames(final InetAddress ip) {
     final Set<String> set = new HashSet<String>();
-    final InetAddressRecord records = InetAddressRecord.findByAddress(this.plugin.getDatabaseHandler(), ip.getHostAddress());
+    final InetAddressRecord records = InetAddressRecord.findByAddress(database, ip.getHostAddress());
     for (final PlayerNameRecord record : records.getPlayerNames()) {
       set.add(record.getPlayerName());
     }
     return set;
+  }
+  
+  public void associatePlayer(String playerName, String address) {
+    final PlayerNameRecord playerNameRecord = this.getPlayerNameRecord(playerName);
+    final InetAddressRecord inetAddressRecord = this.getInetAddressRecord(address.toString());
+
+    // update time stamps
+    final long now = System.currentTimeMillis();
+    playerNameRecord.setLastSeen(now);
+    inetAddressRecord.setLastSeen(now);
+    this.logger.debug(playerNameRecord.getAddresses().toString());
+
+    // link IP address to name
+    if (!playerNameRecord.getAddresses().contains(inetAddressRecord)) {
+      playerNameRecord.getAddresses().add(inetAddressRecord);
+      this.logger.debug(playerNameRecord.getAddresses().toString());
+    }
+
+    this.database.save(playerNameRecord);
+    this.database.save(inetAddressRecord);
+  }
+  
+  private InetAddressRecord getInetAddressRecord(final String address) {
+    if (!InetAddressRecord.isAddressKnown(this.database, address)) {
+      final InetAddressRecord record = new InetAddressRecord();
+      record.setAddress(address);
+      record.updateLastSeen();
+      this.database.save(record);
+    }
+    return InetAddressRecord.findByAddress(this.database, address);
+  }
+
+  private PlayerNameRecord getPlayerNameRecord(final String playerName) {
+    if (!PlayerNameRecord.isPlayerKnown(this.database, playerName)) {
+      final PlayerNameRecord record = new PlayerNameRecord();
+      record.setPlayerName(playerName);
+      record.updateLastSeen();
+      this.database.save(record);
+    }
+    return PlayerNameRecord.findByName(this.database, playerName);
   }
 
 }
