@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2012 James Richardson.
  * 
- * CheckCommand.java is part of Alias.
+ * DeleteCommand.java is part of Alias.
  * 
  * Alias is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -17,8 +17,6 @@
  ******************************************************************************/
 package name.richardson.james.bukkit.alias.query;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.bukkit.OfflinePlayer;
