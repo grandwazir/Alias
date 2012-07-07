@@ -22,8 +22,10 @@ import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
@@ -87,7 +89,8 @@ public class CheckCommand extends PluginCommand {
 
     String playerName = (this.player != null) ? player.getName() : this.address.getHostAddress();
     sender.sendMessage(this.getFormattedPlayerHeader(playerName, playerNames.size()));
-    for (final PlayerNameRecord record : playerNames) {
+    Set<PlayerNameRecord> uniquePlayerNames = new HashSet<PlayerNameRecord>(playerNames);
+    for (final PlayerNameRecord record : uniquePlayerNames) {
       final Date date = new Date(record.getLastSeen());
       final String lastSeenString = CheckCommand.DATE_FORMAT.format(date);
       final String[] arguments = { record.getPlayerName(), lastSeenString };
