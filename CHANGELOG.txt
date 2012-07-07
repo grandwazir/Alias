@@ -1,5 +1,6 @@
 Changelog for Alias (v1.1.0-SNAPSHOT)
 
+2012-07-07 04:38:58 +0100    remove duplicates from header (James Richardson)
 2012-07-07 04:33:58 +0100    preserve order (James Richardson)
 2012-07-07 04:33:27 +0100    remove duplicates from player name list (James Richardson)
 2012-07-07 04:26:24 +0100    remove debugging (James Richardson)

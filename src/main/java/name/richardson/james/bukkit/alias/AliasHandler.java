@@ -31,11 +31,11 @@ public class AliasHandler extends Handler implements AliasAPI {
 
   private final Logger logger = new Logger(this.getClass());
   
-  private final SQLStorage database;
-
+  private final Alias plugin;
+  
   public AliasHandler(final Class<?> parentClass, final Alias plugin) {
     super(parentClass);
-    this.database = plugin.getSQLStorage();
+    this.plugin = plugin;
   }
 
   public Set<String> getIPAddresses(final Player player) {
@@ -44,7 +44,7 @@ public class AliasHandler extends Handler implements AliasAPI {
 
   public Set<String> getIPAddresses(final String playerName) {
     final Set<String> set = new HashSet<String>();
-    final PlayerNameRecord records = PlayerNameRecord.findByName(database, playerName);
+    final PlayerNameRecord records = PlayerNameRecord.findByName(plugin.getSQLStorage(), playerName);
     for (final InetAddressRecord record : records.getAddresses()) {
       set.add(record.getAddress());
     }
@@ -53,7 +53,7 @@ public class AliasHandler extends Handler implements AliasAPI {
 
   public Set<String> getPlayersNames(final InetAddress ip) {
     final Set<String> set = new HashSet<String>();
-    final InetAddressRecord records = InetAddressRecord.findByAddress(database, ip.getHostAddress());
+    final InetAddressRecord records = InetAddressRecord.findByAddress(plugin.getSQLStorage(), ip.getHostAddress());
     for (final PlayerNameRecord record : records.getPlayerNames()) {
       set.add(record.getPlayerName());
     }
@@ -76,8 +76,8 @@ public class AliasHandler extends Handler implements AliasAPI {
       this.logger.debug(playerNameRecord.getAddresses().toString());
     }
 
-    this.database.save(playerNameRecord);
-    this.database.save(inetAddressRecord);
+    plugin.getSQLStorage().save(playerNameRecord);
+    plugin.getSQLStorage().save(inetAddressRecord);
   }
   
   public void deassociatePlayer(String playerName, String alias) {
@@ -89,27 +89,27 @@ public class AliasHandler extends Handler implements AliasAPI {
         playerRecord.getAddresses().remove(record);
       }
     }
-    this.database.save(playerRecord);
+    plugin.getSQLStorage().save(playerRecord);
   }
   
   private InetAddressRecord getInetAddressRecord(final String address) {
-    if (!InetAddressRecord.isAddressKnown(this.database, address)) {
+    if (!InetAddressRecord.isAddressKnown(plugin.getSQLStorage(), address)) {
       final InetAddressRecord record = new InetAddressRecord();
       record.setAddress(address);
       record.updateLastSeen();
-      this.database.save(record);
+      plugin.getSQLStorage().save(record);
     }
-    return InetAddressRecord.findByAddress(this.database, address);
+    return InetAddressRecord.findByAddress(plugin.getSQLStorage(), address);
   }
 
   private PlayerNameRecord getPlayerNameRecord(final String playerName) {
-    if (!PlayerNameRecord.isPlayerKnown(this.database, playerName)) {
+    if (!PlayerNameRecord.isPlayerKnown(plugin.getSQLStorage(), playerName)) {
       final PlayerNameRecord record = new PlayerNameRecord();
       record.setPlayerName(playerName);
       record.updateLastSeen();
-      this.database.save(record);
+      plugin.getSQLStorage().save(record);
     }
-    return PlayerNameRecord.findByName(this.database, playerName);
+    return PlayerNameRecord.findByName(plugin.getSQLStorage(), playerName);
   }
 
 }
