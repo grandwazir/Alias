@@ -80,6 +80,18 @@ public class AliasHandler extends Handler implements AliasAPI {
     this.database.save(inetAddressRecord);
   }
   
+  public void deassociatePlayer(String playerName, String alias) {
+    final PlayerNameRecord playerRecord = this.getPlayerNameRecord(playerName);
+    final PlayerNameRecord aliasRecord  = this.getPlayerNameRecord(alias);
+    if (playerRecord == null || aliasRecord == null) return;
+    for (InetAddressRecord record : aliasRecord.getAddresses()) {
+      if (playerRecord.getAddresses().contains(record)) {
+        playerRecord.getAddresses().remove(record);
+      }
+    }
+    this.database.save(playerRecord);
+  }
+  
   private InetAddressRecord getInetAddressRecord(final String address) {
     if (!InetAddressRecord.isAddressKnown(this.database, address)) {
       final InetAddressRecord record = new InetAddressRecord();

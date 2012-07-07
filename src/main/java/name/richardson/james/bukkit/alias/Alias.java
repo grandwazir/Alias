@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import name.richardson.james.bukkit.alias.query.CheckCommand;
+import name.richardson.james.bukkit.alias.query.DeleteCommand;
 import name.richardson.james.bukkit.utilities.command.CommandManager;
 import name.richardson.james.bukkit.utilities.persistence.SQLStorage;
 import name.richardson.james.bukkit.utilities.plugin.SkeletonPlugin;
@@ -72,6 +73,7 @@ public class Alias extends SkeletonPlugin {
     final CommandManager manager = new CommandManager(this);
     this.getCommand("as").setExecutor(manager);
     manager.addCommand(new CheckCommand(this));
+    manager.addCommand(new DeleteCommand(this));
   }
 
   @Override
