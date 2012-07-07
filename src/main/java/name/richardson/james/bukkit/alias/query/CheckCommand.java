@@ -23,6 +23,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -89,7 +90,7 @@ public class CheckCommand extends PluginCommand {
 
     String playerName = (this.player != null) ? player.getName() : this.address.getHostAddress();
     sender.sendMessage(this.getFormattedPlayerHeader(playerName, playerNames.size()));
-    Set<PlayerNameRecord> uniquePlayerNames = new HashSet<PlayerNameRecord>(playerNames);
+    Set<PlayerNameRecord> uniquePlayerNames = new LinkedHashSet<PlayerNameRecord>(playerNames);
     for (final PlayerNameRecord record : uniquePlayerNames) {
       final Date date = new Date(record.getLastSeen());
       final String lastSeenString = CheckCommand.DATE_FORMAT.format(date);
