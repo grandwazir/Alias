@@ -83,7 +83,6 @@ public class CheckCommand extends PluginCommand {
     } else {
       if (!sender.hasPermission(this.getPermission(3))) throw new CommandPermissionException(this.getMessage("checkcommand-cannot-search-by-address"), this.getPermission(3));
       playerNames = this.lookupIPAddress(this.address.getHostAddress());
-      logger.info(String.valueOf(playerNames.size()));
     }
 
     String playerName = (this.player != null) ? player.getName() : this.address.getHostAddress();

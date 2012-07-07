@@ -1,5 +1,6 @@
 Changelog for Alias (v1.1.0-SNAPSHOT)
 
+2012-07-07 04:24:31 +0100    fix NPE (James Richardson)
 2012-07-07 04:21:44 +0100    add updater defaults and change date format (James Richardson)
 2012-07-07 04:17:16 +0100    fix registering permission to plugin root instead of command root (James Richardson)
 2012-07-07 04:16:47 +0100    clean up (James Richardson)
