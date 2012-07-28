@@ -60,14 +60,14 @@ public class DeleteCommand extends PluginCommand {
   public void execute(final CommandSender sender) throws CommandArgumentException, CommandPermissionException, CommandUsageException {
     String[] arguments = {player.getName(), alias.getName(), sender.getName()};
     handler.deassociatePlayer(player.getName(), alias.getName());
-    logger.info(this.getSimpleFormattedMessage("deletecommand-log-success", arguments));
+    logger.info(this.getSimpleFormattedMessage("log-success", arguments));
     String[] arguments1 = {player.getName(), alias.getName()};
-    sender.sendMessage(this.getSimpleFormattedMessage("deletecommand-success", arguments1));
+    sender.sendMessage(this.getSimpleFormattedMessage("success", arguments1));
   }
 
   public void parseArguments(final String[] arguments, final CommandSender sender) throws CommandArgumentException {
     if (arguments.length != 2) {
-      throw new CommandArgumentException(this.getMessage("deletecommand-no-arguments"), this.getMessage("checkcommand-player-search-hint"));
+      throw new CommandArgumentException(this.getMessage("no-arguments"), this.getMessage("player-search-hint"));
     }
     
     player = null;
@@ -90,7 +90,7 @@ public class DeleteCommand extends PluginCommand {
   private void registerPermissions() {
     final String prefix = this.plugin.getDescription().getName().toLowerCase() + ".";
     // create the base permission
-    final Permission base = new Permission(prefix + this.getName(), this.getMessage("deletecommand-permission-description"), PermissionDefault.OP);
+    final Permission base = new Permission(prefix + this.getName(), this.getMessage("permission-description"), PermissionDefault.OP);
     base.addParent(this.plugin.getRootPermission(), true);
     this.addPermission(base);
   }

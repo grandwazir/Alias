@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import com.avaje.ebean.EbeanServer;
@@ -50,7 +51,7 @@ import name.richardson.james.bukkit.utilities.persistence.SQLStorage;
 public class CheckCommand extends PluginCommand {
   
   /* The style to use for outputting all dates */
-  private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MMM d yyyy @ k:m");
+  private static final DateFormat DATE_FORMAT = SimpleDateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
 
   /* The logger for this class */
   private final Logger logger = new Logger(this.getClass());
@@ -97,7 +98,7 @@ public class CheckCommand extends PluginCommand {
       final Date date = new Date(record.getLastSeen());
       final String lastSeenString = CheckCommand.DATE_FORMAT.format(date);
       final String[] arguments = { record.getPlayerName(), lastSeenString };
-      sender.sendMessage(this.getSimpleFormattedMessage("checkcommand-list-item", arguments));
+      sender.sendMessage(this.getSimpleFormattedMessage("list-item", arguments));
     }
 
   }
@@ -109,23 +110,15 @@ public class CheckCommand extends PluginCommand {
     
     player = null;
     address = null;
-
-    for (final String argument : arguments) {
-      if (argument.startsWith("p:")) {
-        this.player = this.matchPlayer(argument.replace("p:", ""));
-        break;
-      } else if (argument.startsWith("a:")) {
-        try {
-          this.address = InetAddress.getByName(argument.replace("a:", ""));
-        } catch (final UnknownHostException e) {
-          throw new CommandArgumentException(this.getMessage("checkcommand-specify-valid-address"), this.getMessage("checkcommand-specify-valid-address"));
-        }
-        break;
-      }
+ 
+    try {
+      this.address = InetAddress.getByName(arguments[0]);
+    } catch (final UnknownHostException e) {
+      this.player = this.matchPlayer(arguments[0]);
     }
-    
+
     if (player == null  && address == null) {
-      throw new CommandArgumentException(this.getMessage("checkcommand-no-arguments"), this.getMessage("checkcommand-player-search-hint"));
+      throw new CommandArgumentException(this.getMessage("no-arguments"), this.getMessage("player-search-hint"));
     }
 
   }
@@ -166,7 +159,7 @@ public class CheckCommand extends PluginCommand {
 
   private void registerPermissions() {
     final String prefix = this.plugin.getDescription().getName().toLowerCase() + ".";
-    final String wildcardDescription = String.format(this.plugin.getMessage("wildcard-permission-description"), this.getName());
+    final String wildcardDescription = String.format(this.plugin.getMessage("plugincommand.wildcard-permission-description"), this.getName());
     // create the wildcard permission
     final Permission wildcard = new Permission(prefix + this.getName() + ".*", wildcardDescription, PermissionDefault.OP);
     wildcard.addParent(this.plugin.getRootPermission(), true);

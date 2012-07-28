@@ -17,6 +17,7 @@
  ******************************************************************************/
 package name.richardson.james.bukkit.alias;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
@@ -119,12 +120,11 @@ public class Alias extends SkeletonPlugin {
   @Override
   protected void setupPersistence() throws SQLException {
     this.logger.debug("Establishing persistence..");
-    try {
-      this.storage = new SQLStorage(this, this.getDatabaseClasses());
-    } catch (final Exception e) {
-      e.printStackTrace();
-      throw new SQLException();
-    }
+    this.storage = new SQLStorage(this, this.getDatabaseClasses());
+  }
+  
+  protected void setupMetrics() throws IOException {
+    new MetricsListener(this);
   }
 
 }

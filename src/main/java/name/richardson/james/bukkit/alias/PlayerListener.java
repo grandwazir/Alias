@@ -20,7 +20,7 @@ package name.richardson.james.bukkit.alias;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPreLoginEvent;
 
 import name.richardson.james.bukkit.utilities.internals.Logger;
 
@@ -36,11 +36,11 @@ public class PlayerListener implements Listener {
     this.handler = alias.getHandler(this.getClass());
   }
 
-  @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-  public void onPlayerLogin(final PlayerJoinEvent event) {
+  @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+  public void onPlayerLogin(final PlayerPreLoginEvent event) {
     logger.debug("Recieved " + event.getClass().getSimpleName() + ".");
-    final String playerName = event.getPlayer().getName();
-    final String address = event.getPlayer().getAddress().getAddress().getHostAddress();
+    final String playerName = event.getName();
+    final String address = event.getAddress().getHostAddress();
     this.handler.associatePlayer(playerName, address);
   }
 
