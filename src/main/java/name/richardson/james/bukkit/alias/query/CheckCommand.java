@@ -28,6 +28,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.avaje.ebean.EbeanServer;
+
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -36,8 +38,8 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 import name.richardson.james.bukkit.alias.Alias;
-import name.richardson.james.bukkit.alias.InetAddressRecord;
-import name.richardson.james.bukkit.alias.PlayerNameRecord;
+import name.richardson.james.bukkit.alias.persistence.InetAddressRecord;
+import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
 import name.richardson.james.bukkit.utilities.command.CommandArgumentException;
 import name.richardson.james.bukkit.utilities.command.CommandPermissionException;
 import name.richardson.james.bukkit.utilities.command.CommandUsageException;
@@ -57,7 +59,7 @@ public class CheckCommand extends PluginCommand {
   private final Server server;
 
   /* A reference to the SQL storage for the plugin */
-  private final SQLStorage storage;
+  private final EbeanServer database;
 
   /* The player who we are looking up in the database */
   private OfflinePlayer player;
@@ -67,7 +69,7 @@ public class CheckCommand extends PluginCommand {
 
   public CheckCommand(final Alias plugin) {
     super(plugin);
-    this.storage = plugin.getSQLStorage();
+    this.database = plugin.getDatabase();
     this.server = plugin.getServer();
     this.registerPermissions();
   }
@@ -132,11 +134,11 @@ public class CheckCommand extends PluginCommand {
     final Object[] arguments = { size, name };
     final double[] limits = { 0, 1, 2 };
     final String[] formats = { this.getMessage("no-name").toLowerCase(), this.getMessage("one-name").toLowerCase(), this.getMessage("many-names") };
-    return this.getChoiceFormattedMessage("checkcommand-header", arguments, formats, limits);
+    return this.getChoiceFormattedMessage("header", arguments, formats, limits);
   }
 
   private List<PlayerNameRecord> lookupIPAddress(final String address) {
-    final InetAddressRecord record = InetAddressRecord.findByAddress(this.storage, address);
+    final InetAddressRecord record = InetAddressRecord.findByAddress(this.database, address);
     if (record != null) {
       return record.getPlayerNames();
     }
@@ -145,7 +147,7 @@ public class CheckCommand extends PluginCommand {
   }
 
   private List<InetAddressRecord> lookupPlayerName(final String playerName) {
-    final PlayerNameRecord record = PlayerNameRecord.findByName(this.storage, playerName);
+    final PlayerNameRecord record = PlayerNameRecord.findByName(this.database, playerName);
     if (record != null) {
       return record.getAddresses();
     }
@@ -170,15 +172,15 @@ public class CheckCommand extends PluginCommand {
     wildcard.addParent(this.plugin.getRootPermission(), true);
     this.addPermission(wildcard);
     // create the base permission
-    final Permission base = new Permission(prefix + this.getName(), this.getMessage("checkcommand-permission-description"), PermissionDefault.OP);
+    final Permission base = new Permission(prefix + this.getName(), this.getMessage("permission-description"), PermissionDefault.OP);
     base.addParent(wildcard, true);
     this.addPermission(base);
     // create permission for searching by player name.
-    final Permission player = new Permission(prefix + this.getName() + ".players", this.getMessage("checkcommand-permission-player-description"), PermissionDefault.OP);
+    final Permission player = new Permission(prefix + this.getName() + ".players", this.getMessage("permission-player-description"), PermissionDefault.OP);
     player.addParent(wildcard, true);
     this.addPermission(player);
     // create permission for searching by ip address.
-    final Permission address = new Permission(prefix + this.getName() + ".addresses", this.getMessage("checkcommand-permission-address-description"), PermissionDefault.OP);
+    final Permission address = new Permission(prefix + this.getName() + ".addresses", this.getMessage("permission-address-description"), PermissionDefault.OP);
     address.addParent(wildcard, true);
     this.addPermission(address);
   }

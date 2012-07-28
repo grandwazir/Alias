@@ -18,10 +18,13 @@
 package name.richardson.james.bukkit.alias;
 
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.avaje.ebean.EbeanServer;
+
+import name.richardson.james.bukkit.alias.persistence.InetAddressRecord;
+import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
 import name.richardson.james.bukkit.alias.query.CheckCommand;
 import name.richardson.james.bukkit.alias.query.DeleteCommand;
 import name.richardson.james.bukkit.utilities.command.CommandManager;
@@ -30,59 +33,92 @@ import name.richardson.james.bukkit.utilities.plugin.SkeletonPlugin;
 
 public class Alias extends SkeletonPlugin {
 
-  private static final List<Class<?>> databaseClasses = Alias.setDatabaseClasses();
+  /** The backend SQLStorage. */
+  private SQLStorage storage;
 
-  private static List<Class<?>> setDatabaseClasses() {
+  /**
+   * Gets the artifact id.
+   *
+   * @return the artifact id
+   */
+  public String getArtifactID() {
+    return "alias";
+  }
+  
+  public EbeanServer getDatabase() {
+    return storage.getEbeanServer();
+  }
+
+  /**
+   * Gets the database classes.
+   *
+   * @return the database classes
+   */
+  @Override
+  public List<Class<?>> getDatabaseClasses() {
     final List<Class<?>> list = new LinkedList<Class<?>>();
     list.add(InetAddressRecord.class);
     list.add(PlayerNameRecord.class);
     return list;
   }
 
-  private SQLStorage storage;
-
-  public String getArtifactID() {
-    return "alias";
-  }
-
-  @Override
-  public List<Class<?>> getDatabaseClasses() {
-    return Collections.unmodifiableList(Alias.databaseClasses);
-  }
-
+  /**
+   * Gets the group id.
+   *
+   * @return the group id
+   */
   public String getGroupID() {
     return "name.richardson.james.bukkit";
   }
 
+  /**
+   * Gets the handler.
+   *
+   * @param parentClass the parent class
+   * @return the handler
+   */
   public AliasHandler getHandler(final Class<?> parentClass) {
     return new AliasHandler(parentClass, this);
   }
 
-  public SQLStorage getSQLStorage() {
-    return this.storage;
-  }
-
+  /**
+   * On disable.
+   */
   @Override
   public void onDisable() {
     this.getServer().getScheduler().cancelTasks(this);
     this.logger.info(String.format("%s is disabled!", this.getDescription().getName()));
   }
 
+  /**
+   * Register commands.
+   */
   @Override
   protected void registerCommands() {
+    this.logger.debug("Registering commands..");
     final CommandManager manager = new CommandManager(this);
     this.getCommand("as").setExecutor(manager);
     manager.addCommand(new CheckCommand(this));
     manager.addCommand(new DeleteCommand(this));
   }
 
+  /**
+   * Register events.
+   */
   @Override
   protected void registerEvents() {
+    this.logger.debug("Registering listeners..");
     this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
   }
 
+  /**
+   * Setup persistence.
+   *
+   * @throws SQLException the sQL exception
+   */
   @Override
   protected void setupPersistence() throws SQLException {
+    this.logger.debug("Establishing persistence..");
     try {
       this.storage = new SQLStorage(this, this.getDatabaseClasses());
     } catch (final Exception e) {

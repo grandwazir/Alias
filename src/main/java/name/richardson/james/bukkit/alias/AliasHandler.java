@@ -21,21 +21,24 @@ import java.net.InetAddress;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.avaje.ebean.EbeanServer;
+
 import org.bukkit.entity.Player;
 
+import name.richardson.james.bukkit.alias.persistence.InetAddressRecord;
+import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
 import name.richardson.james.bukkit.utilities.internals.Handler;
 import name.richardson.james.bukkit.utilities.internals.Logger;
-import name.richardson.james.bukkit.utilities.persistence.SQLStorage;
 
 public class AliasHandler extends Handler implements AliasAPI {
 
   private final Logger logger = new Logger(this.getClass());
   
-  private final Alias plugin;
+  private final EbeanServer database;
   
   public AliasHandler(final Class<?> parentClass, final Alias plugin) {
     super(parentClass);
-    this.plugin = plugin;
+    this.database = plugin.getDatabase();
   }
 
   public Set<String> getIPAddresses(final Player player) {
@@ -44,7 +47,7 @@ public class AliasHandler extends Handler implements AliasAPI {
 
   public Set<String> getIPAddresses(final String playerName) {
     final Set<String> set = new HashSet<String>();
-    final PlayerNameRecord records = PlayerNameRecord.findByName(plugin.getSQLStorage(), playerName);
+    final PlayerNameRecord records = PlayerNameRecord.findByName(database, playerName);
     for (final InetAddressRecord record : records.getAddresses()) {
       set.add(record.getAddress());
     }
@@ -53,7 +56,7 @@ public class AliasHandler extends Handler implements AliasAPI {
 
   public Set<String> getPlayersNames(final InetAddress ip) {
     final Set<String> set = new HashSet<String>();
-    final InetAddressRecord records = InetAddressRecord.findByAddress(plugin.getSQLStorage(), ip.getHostAddress());
+    final InetAddressRecord records = InetAddressRecord.findByAddress(database, ip.getHostAddress());
     for (final PlayerNameRecord record : records.getPlayerNames()) {
       set.add(record.getPlayerName());
     }
@@ -76,8 +79,8 @@ public class AliasHandler extends Handler implements AliasAPI {
       this.logger.debug(playerNameRecord.getAddresses().toString());
     }
 
-    plugin.getSQLStorage().save(playerNameRecord);
-    plugin.getSQLStorage().save(inetAddressRecord);
+    database.save(playerNameRecord);
+    database.save(inetAddressRecord);
   }
   
   public void deassociatePlayer(String playerName, String alias) {
@@ -89,27 +92,27 @@ public class AliasHandler extends Handler implements AliasAPI {
         playerRecord.getAddresses().remove(record);
       }
     }
-    plugin.getSQLStorage().save(playerRecord);
+    database.save(playerRecord);
   }
   
   private InetAddressRecord getInetAddressRecord(final String address) {
-    if (!InetAddressRecord.isAddressKnown(plugin.getSQLStorage(), address)) {
+    if (!InetAddressRecord.isAddressKnown(database, address)) {
       final InetAddressRecord record = new InetAddressRecord();
       record.setAddress(address);
       record.updateLastSeen();
-      plugin.getSQLStorage().save(record);
+      database.save(record);
     }
-    return InetAddressRecord.findByAddress(plugin.getSQLStorage(), address);
+    return InetAddressRecord.findByAddress(database, address);
   }
 
   private PlayerNameRecord getPlayerNameRecord(final String playerName) {
-    if (!PlayerNameRecord.isPlayerKnown(plugin.getSQLStorage(), playerName)) {
+    if (!PlayerNameRecord.isPlayerKnown(database, playerName)) {
       final PlayerNameRecord record = new PlayerNameRecord();
       record.setPlayerName(playerName);
       record.updateLastSeen();
-      plugin.getSQLStorage().save(record);
+      database.save(record);
     }
-    return PlayerNameRecord.findByName(plugin.getSQLStorage(), playerName);
+    return PlayerNameRecord.findByName(database, playerName);
   }
 
 }
