@@ -64,8 +64,8 @@ public class AliasHandler extends Handler implements AliasAPI {
   }
   
   public void associatePlayer(String playerName, String address) {
-    final PlayerNameRecord playerNameRecord = this.getPlayerNameRecord(playerName);
-    final InetAddressRecord inetAddressRecord = this.getInetAddressRecord(address.toString());
+    final PlayerNameRecord playerNameRecord = PlayerNameRecord.findByName(database, playerName);
+    final InetAddressRecord inetAddressRecord = InetAddressRecord.findByAddress(database, address.toString());
 
     // update time stamps
     final long now = System.currentTimeMillis();
@@ -80,13 +80,12 @@ public class AliasHandler extends Handler implements AliasAPI {
     }
 
     database.save(playerNameRecord);
-    database.save(inetAddressRecord);
   }
   
   public void deassociatePlayer(String playerName, String alias) {
-    final PlayerNameRecord playerRecord = this.getPlayerNameRecord(playerName);
-    final PlayerNameRecord aliasRecord  = this.getPlayerNameRecord(alias);
-    if (playerRecord == null || aliasRecord == null) return;
+    if (PlayerNameRecord.isPlayerKnown(database, playerName) && PlayerNameRecord.isPlayerKnown(database, alias)) return;
+    final PlayerNameRecord playerRecord = PlayerNameRecord.findByName(database, playerName);
+    final PlayerNameRecord aliasRecord  = PlayerNameRecord.findByName(database, alias);
     for (InetAddressRecord record : aliasRecord.getAddresses()) {
       if (playerRecord.getAddresses().contains(record)) {
         playerRecord.getAddresses().remove(record);
@@ -95,24 +94,5 @@ public class AliasHandler extends Handler implements AliasAPI {
     database.save(playerRecord);
   }
   
-  private InetAddressRecord getInetAddressRecord(final String address) {
-    if (!InetAddressRecord.isAddressKnown(database, address)) {
-      final InetAddressRecord record = new InetAddressRecord();
-      record.setAddress(address);
-      record.updateLastSeen();
-      database.save(record);
-    }
-    return InetAddressRecord.findByAddress(database, address);
-  }
-
-  private PlayerNameRecord getPlayerNameRecord(final String playerName) {
-    if (!PlayerNameRecord.isPlayerKnown(database, playerName)) {
-      final PlayerNameRecord record = new PlayerNameRecord();
-      record.setPlayerName(playerName);
-      record.updateLastSeen();
-      database.save(record);
-    }
-    return PlayerNameRecord.findByName(database, playerName);
-  }
 
 }

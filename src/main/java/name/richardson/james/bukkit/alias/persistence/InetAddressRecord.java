@@ -19,6 +19,7 @@ package name.richardson.james.bukkit.alias.persistence;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -37,7 +38,11 @@ public class InetAddressRecord {
 
   public static InetAddressRecord findByAddress(final EbeanServer database, final String address) {
     logger.debug(String.format("Attempting to return InetAddressRecord matching the address %s.", address));
-    final InetAddressRecord record = database.find(InetAddressRecord.class).where().eq("address", address).findUnique();
+    InetAddressRecord record = database.find(InetAddressRecord.class).where().eq("address", address).findUnique();
+    if (record == null) {
+      record = new InetAddressRecord();
+      record.setAddress(address);
+    }
     return record;
   }
 
@@ -74,7 +79,7 @@ public class InetAddressRecord {
     return this.lastSeen;
   }
 
-  @ManyToMany(targetEntity = PlayerNameRecord.class)
+  @ManyToMany(targetEntity = PlayerNameRecord.class, cascade=CascadeType.PERSIST)
   public List<PlayerNameRecord> getPlayerNames() {
     return this.playerNames;
   }

@@ -2,7 +2,6 @@ name: Alias
 main: name.richardson.james.bukkit.alias.Alias
 description: ${project.description}
 version: ${project.version}
-database: true
 commands:
   as:
     description: 'Additional alias commands'

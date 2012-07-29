@@ -49,8 +49,7 @@ public class DeleteCommand extends PluginCommand {
   
   private AliasHandler handler;
 
-  private OfflinePlayer alias;
-  
+  private OfflinePlayer alias; 
  
   public DeleteCommand(final Alias plugin) {
     super(plugin);

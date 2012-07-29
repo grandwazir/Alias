@@ -39,7 +39,11 @@ public class PlayerNameRecord {
 
   public static PlayerNameRecord findByName(final EbeanServer database, final String playerName) {
     logger.debug(String.format("Attempting to return PlayerNameRecord matching the name %s.", playerName));
-    final PlayerNameRecord record = database.find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
+    PlayerNameRecord record = database.find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
+    if (record == null) {
+      record = new PlayerNameRecord();
+      record.setPlayerName(playerName);
+    }
     return record;
   }
 
@@ -63,7 +67,7 @@ public class PlayerNameRecord {
 
   public List<InetAddressRecord> addresses;
 
-  @ManyToMany(cascade = CascadeType.ALL)
+  @ManyToMany(cascade = CascadeType.PERSIST)
   @JoinTable(name = "alias_players_addresses")
   public List<InetAddressRecord> getAddresses() {
     return this.addresses;

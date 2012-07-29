@@ -1,5 +1,7 @@
 Changelog for Alias (v1.1.0-SNAPSHOT)
 
+2012-07-29 13:33:41 +0100    remove unused import (James Richardson)
+2012-07-29 02:12:36 +0100    preparing for release (James Richardson)
 2012-07-29 00:23:15 +0100    Allow usage from console (James Richardson)
 2012-07-29 00:20:35 +0100    added Metrics - changed from LoginEvent to PreLoginEvent (James Richardson)
 2012-07-28 23:17:18 +0100    add MetricsListener (James Richardson)
