@@ -1,5 +1,6 @@
 Changelog for Alias (v1.1.0-SNAPSHOT)
 
+2012-07-29 00:23:15 +0100    Allow usage from console (James Richardson)
 2012-07-29 00:20:35 +0100    added Metrics - changed from LoginEvent to PreLoginEvent (James Richardson)
 2012-07-28 23:17:18 +0100    add MetricsListener (James Richardson)
 2012-07-07 05:20:58 +0100    fix NPE when initalising handler before plugin is ready (James Richardson)

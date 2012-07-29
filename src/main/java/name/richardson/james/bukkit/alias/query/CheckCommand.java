@@ -53,8 +53,7 @@ import name.richardson.james.bukkit.utilities.persistence.SQLStorage;
 public class CheckCommand extends PluginCommand {
   
   /* The style to use for outputting all dates */
-  private static final DateFormat DATE_FORMAT = SimpleDateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
-
+  private static final DateFormat DATE_FORMAT = new SimpleDateFormat("d MMMMM yyyy HH:mm (z)");
   /* The logger for this class */
   private final Logger logger = new Logger(this.getClass());
   
@@ -107,7 +106,7 @@ public class CheckCommand extends PluginCommand {
 
   public void parseArguments(final String[] arguments, final CommandSender sender) throws CommandArgumentException {
     if (arguments.length == 0) {
-      throw new CommandArgumentException(this.getMessage("checkcommand-no-arguments"), this.getMessage("checkcommand-player-search-hint"));
+      throw new CommandArgumentException(this.getMessage("no-arguments"), this.getMessage("checkcommand-player-search-hint"));
     }
     
     player = null;
