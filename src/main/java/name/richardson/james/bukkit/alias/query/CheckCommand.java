@@ -22,11 +22,9 @@ import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import com.avaje.ebean.EbeanServer;
@@ -47,13 +45,13 @@ import name.richardson.james.bukkit.utilities.command.CommandUsageException;
 import name.richardson.james.bukkit.utilities.command.ConsoleCommand;
 import name.richardson.james.bukkit.utilities.command.PluginCommand;
 import name.richardson.james.bukkit.utilities.internals.Logger;
-import name.richardson.james.bukkit.utilities.persistence.SQLStorage;
 
 @ConsoleCommand
 public class CheckCommand extends PluginCommand {
   
   /* The style to use for outputting all dates */
   private static final DateFormat DATE_FORMAT = new SimpleDateFormat("d MMMMM yyyy HH:mm (z)");
+  
   /* The logger for this class */
   private final Logger logger = new Logger(this.getClass());
   
