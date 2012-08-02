@@ -40,7 +40,7 @@ public class PlayerListener implements Listener {
   public void onPlayerLogin(final PlayerPreLoginEvent event) {
     logger.debug("Recieved " + event.getClass().getSimpleName() + ".");
     final String playerName = event.getName();
-    final String address = event.getAddress().getHostAddress();
+    final String address = event.getAddress().toString();
     this.handler.associatePlayer(playerName, address);
   }
 

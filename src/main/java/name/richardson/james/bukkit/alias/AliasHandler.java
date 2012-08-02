@@ -64,9 +64,9 @@ public class AliasHandler extends Handler implements AliasAPI {
   }
   
   public void associatePlayer(String playerName, String address) {
+    logger.debug("Associating " + playerName + "with address " + address);
     final PlayerNameRecord playerNameRecord = PlayerNameRecord.findByName(database, playerName);
-    final InetAddressRecord inetAddressRecord = InetAddressRecord.findByAddress(database, address.toString());
-
+    final InetAddressRecord inetAddressRecord = InetAddressRecord.findByAddress(database, address);
     // update time stamps
     final long now = System.currentTimeMillis();
     playerNameRecord.setLastSeen(now);
