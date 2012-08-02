@@ -44,6 +44,8 @@ public class PlayerNameRecord {
     if (record == null) {
       record = new PlayerNameRecord();
       record.setPlayerName(playerName);
+      database.save(record);
+      record = database.find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
     }
     return record;
   }
@@ -71,7 +73,7 @@ public class PlayerNameRecord {
   @ManyToMany(cascade = CascadeType.PERSIST)
   @JoinTable(name = "alias_players_addresses")
   public List<InetAddressRecord> getAddresses() {
-    if (this.addresses.isEmpty()) return new LinkedList<InetAddressRecord>();
+    if (this.addresses == null) return new LinkedList<InetAddressRecord>();
     return this.addresses;
   }
 

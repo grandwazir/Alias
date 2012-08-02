@@ -1,5 +1,6 @@
 Changelog for Alias (v1.1.0-SNAPSHOT)
 
+2012-08-02 09:13:32 +0100    Fix NPE in PreLoginEvent (James Richardson)
 2012-07-29 18:07:25 +0100    preparing for snapshot testing (James Richardson)
 2012-07-29 13:33:41 +0100    remove unused import (James Richardson)
 2012-07-29 02:12:36 +0100    preparing for release (James Richardson)

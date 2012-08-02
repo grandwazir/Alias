@@ -42,6 +42,8 @@ public class InetAddressRecord {
     if (record == null) {
       record = new InetAddressRecord();
       record.setAddress(address);
+      database.save(record);
+      record = database.find(InetAddressRecord.class).where().eq("address", address).findUnique();
     }
     return record;
   }
