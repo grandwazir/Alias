@@ -104,7 +104,7 @@ public class CheckCommand extends PluginCommand {
 
   public void parseArguments(final String[] arguments, final CommandSender sender) throws CommandArgumentException {
     if (arguments.length == 0) {
-      throw new CommandArgumentException(this.getMessage("no-arguments"), this.getMessage("checkcommand-player-search-hint"));
+      throw new CommandArgumentException(this.getMessage("no-arguments"), this.getMessage("player-search-hint"));
     }
     
     player = null;
@@ -114,10 +114,6 @@ public class CheckCommand extends PluginCommand {
       this.address = InetAddress.getByName(arguments[0]);
     } catch (final UnknownHostException e) {
       this.player = this.matchPlayer(arguments[0]);
-    }
-
-    if (player == null  && address == null) {
-      throw new CommandArgumentException(this.getMessage("no-arguments"), this.getMessage("player-search-hint"));
     }
 
   }
