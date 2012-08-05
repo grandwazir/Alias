@@ -1,5 +1,6 @@
 Changelog for Alias (v1.1.2-SNAPSHOT)
 
+2012-08-06 00:30:24 +0100    update to AbstractPlugin and new frameworks (James Richardson)
 
 v1.1.1
 2012-08-02 09:52:42 +0100    prepare config for release (James Richardson)
