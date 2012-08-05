@@ -30,16 +30,11 @@ import javax.persistence.Table;
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.validation.NotNull;
 
-import name.richardson.james.bukkit.utilities.internals.Logger;
-
 @Entity
 @Table(name = "alias_players")
 public class PlayerNameRecord {
 
-  private final static Logger logger = new Logger(PlayerNameRecord.class);
-
   public static PlayerNameRecord findByName(final EbeanServer database, final String playerName) {
-    logger.debug(String.format("Attempting to return PlayerNameRecord matching the name %s.", playerName));
     PlayerNameRecord record = database.find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
     if (record == null) {
       record = new PlayerNameRecord();

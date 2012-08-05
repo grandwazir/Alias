@@ -22,12 +22,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPreLoginEvent;
 
-import name.richardson.james.bukkit.utilities.internals.Logger;
-
 public class PlayerListener implements Listener {
-
-  /** The logger assigned to this listener */
-  private final Logger logger = new Logger(this.getClass());
   
   /** The handler for this listener */
   private final AliasHandler handler;
@@ -38,7 +33,7 @@ public class PlayerListener implements Listener {
 
   @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
   public void onPlayerLogin(final PlayerPreLoginEvent event) {
-    logger.debug("Recieved " + event.getClass().getSimpleName() + ".");
+    // logger.debug("Recieved " + event.getClass().getSimpleName() + ".");
     final String playerName = event.getName();
     final String address = event.getAddress().toString();
     this.handler.associatePlayer(playerName, address);

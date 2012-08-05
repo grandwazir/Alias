@@ -27,17 +27,12 @@ import org.bukkit.entity.Player;
 
 import name.richardson.james.bukkit.alias.persistence.InetAddressRecord;
 import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
-import name.richardson.james.bukkit.utilities.internals.Handler;
-import name.richardson.james.bukkit.utilities.internals.Logger;
 
-public class AliasHandler extends Handler implements AliasAPI {
-
-  private final Logger logger = new Logger(this.getClass());
+public class AliasHandler implements AliasAPI {
   
   private final EbeanServer database;
   
   public AliasHandler(final Class<?> parentClass, final Alias plugin) {
-    super(parentClass);
     this.database = plugin.getDatabase();
   }
 
@@ -64,19 +59,19 @@ public class AliasHandler extends Handler implements AliasAPI {
   }
   
   public void associatePlayer(String playerName, String address) {
-    logger.debug("Associating " + playerName + "with address " + address);
+    // logger.debug("Associating " + playerName + "with address " + address);
     final PlayerNameRecord playerNameRecord = PlayerNameRecord.findByName(database, playerName);
     final InetAddressRecord inetAddressRecord = InetAddressRecord.findByAddress(database, address);
     // update time stamps
     final long now = System.currentTimeMillis();
     playerNameRecord.setLastSeen(now);
     inetAddressRecord.setLastSeen(now);
-    this.logger.debug(playerNameRecord.getAddresses().toString());
+    // this.logger.debug(playerNameRecord.getAddresses().toString());
 
     // link IP address to name
     if (!playerNameRecord.getAddresses().contains(inetAddressRecord)) {
       playerNameRecord.getAddresses().add(inetAddressRecord);
-      this.logger.debug(playerNameRecord.getAddresses().toString());
+      // this.logger.debug(playerNameRecord.getAddresses().toString());
     }
 
     database.save(playerNameRecord);

@@ -28,16 +28,11 @@ import javax.persistence.Table;
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.validation.NotNull;
 
-import name.richardson.james.bukkit.utilities.internals.Logger;
-
 @Entity
 @Table(name = "alias_addresses")
 public class InetAddressRecord {
 
-  private final static Logger logger = new Logger(InetAddressRecord.class);
-
   public static InetAddressRecord findByAddress(final EbeanServer database, final String address) {
-    logger.debug(String.format("Attempting to return InetAddressRecord matching the address %s.", address));
     InetAddressRecord record = database.find(InetAddressRecord.class).where().eq("address", address).findUnique();
     if (record == null) {
       record = new InetAddressRecord();

@@ -29,10 +29,11 @@ import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
 import name.richardson.james.bukkit.alias.query.CheckCommand;
 import name.richardson.james.bukkit.alias.query.DeleteCommand;
 import name.richardson.james.bukkit.utilities.command.CommandManager;
+import name.richardson.james.bukkit.utilities.configuration.DatabaseConfiguration;
 import name.richardson.james.bukkit.utilities.persistence.SQLStorage;
-import name.richardson.james.bukkit.utilities.plugin.SkeletonPlugin;
+import name.richardson.james.bukkit.utilities.plugin.AbstractPlugin;
 
-public class Alias extends SkeletonPlugin {
+public class Alias extends AbstractPlugin {
 
   /** The backend SQLStorage. */
   private SQLStorage storage;
@@ -82,33 +83,23 @@ public class Alias extends SkeletonPlugin {
     return new AliasHandler(parentClass, this);
   }
 
-  /**
-   * On disable.
-   */
-  @Override
-  public void onDisable() {
-    this.getServer().getScheduler().cancelTasks(this);
-    this.logger.info(String.format("%s is disabled!", this.getDescription().getName()));
-  }
 
   /**
    * Register commands.
    */
   @Override
   protected void registerCommands() {
-    this.logger.debug("Registering commands..");
     final CommandManager manager = new CommandManager(this);
     this.getCommand("as").setExecutor(manager);
-    manager.addCommand(new CheckCommand(this));
-    manager.addCommand(new DeleteCommand(this));
+    // manager.addCommand(new CheckCommand(this));
+    // manager.addCommand(new DeleteCommand(this));
   }
 
   /**
    * Register events.
    */
   @Override
-  protected void registerEvents() {
-    this.logger.debug("Registering listeners..");
+  protected void registerListeners() {
     this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
   }
 
@@ -118,13 +109,12 @@ public class Alias extends SkeletonPlugin {
    * @throws SQLException the sQL exception
    */
   @Override
-  protected void setupPersistence() throws SQLException {
-    this.logger.debug("Establishing persistence..");
-    this.storage = new SQLStorage(this, this.getDatabaseClasses());
-  }
-  
-  protected void setupMetrics() throws IOException {
-    new MetricsListener(this);
+  protected void establishPersistence() throws SQLException {
+    try {
+      this.storage = new SQLStorage(this, new DatabaseConfiguration(this), this.getDatabaseClasses());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
 }
