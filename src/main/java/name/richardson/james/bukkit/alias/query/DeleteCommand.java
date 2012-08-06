@@ -13,24 +13,24 @@ import name.richardson.james.bukkit.utilities.command.ConsoleCommand;
 @ConsoleCommand
 public final class DeleteCommand extends AbstractCommand {
 
+  private final AliasHandler handler;
+
   private String playerName;
-  
+
   private String targetName;
 
-  private AliasHandler handler;
-
-  public DeleteCommand(Alias plugin) {
+  public DeleteCommand(final Alias plugin) {
     super(plugin, false);
     this.handler = plugin.getHandler();
   }
 
-  public void execute(CommandSender sender) throws CommandArgumentException, CommandPermissionException, CommandUsageException {
-    this.handler.deassociatePlayer(playerName, targetName);
-    sender.sendMessage(this.getLocalisation().getMessage(this, "dessociated-player", playerName, targetName));
-    this.getLogger().info(this, "used", playerName, targetName, sender.getName());
+  public void execute(final CommandSender sender) throws CommandArgumentException, CommandPermissionException, CommandUsageException {
+    this.handler.deassociatePlayer(this.playerName, this.targetName);
+    sender.sendMessage(this.getLocalisation().getMessage(this, "dessociated-player", this.playerName, this.targetName));
+    this.getLogger().info(this, "used", this.playerName, this.targetName, sender.getName());
   }
 
-  public void parseArguments(String[] arguments, CommandSender sender) throws CommandArgumentException {
+  public void parseArguments(final String[] arguments, final CommandSender sender) throws CommandArgumentException {
     if (arguments.length < 2) {
       throw new CommandArgumentException(this.getLocalisation().getMessage(this, "specify-player-names"), null);
     } else {

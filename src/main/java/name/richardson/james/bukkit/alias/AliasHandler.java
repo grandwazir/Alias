@@ -78,19 +78,19 @@ public final class AliasHandler {
     final PlayerNameRecord record = PlayerNameRecord.findByName(this.database, playerName);
     return record.getAddresses();
   }
-  
-  public List<PlayerNameRecord> getPlayersNames(final String playerName) {
-    final PlayerNameRecord record = PlayerNameRecord.findByName(this.database, playerName);
-    final List<PlayerNameRecord> records = new ArrayList<PlayerNameRecord>();
-    for (InetAddressRecord address : record.getAddresses()) {
-      records.addAll(address.getPlayerNames());
-    }
-    return records;
-  }
 
   public List<PlayerNameRecord> getPlayersNames(final InetAddress ip) {
     final InetAddressRecord record = InetAddressRecord.findByAddress(this.database, ip.getHostAddress());
     return record.getPlayerNames();
+  }
+
+  public List<PlayerNameRecord> getPlayersNames(final String playerName) {
+    final PlayerNameRecord record = PlayerNameRecord.findByName(this.database, playerName);
+    final List<PlayerNameRecord> records = new ArrayList<PlayerNameRecord>();
+    for (final InetAddressRecord address : record.getAddresses()) {
+      records.addAll(address.getPlayerNames());
+    }
+    return records;
   }
 
 }

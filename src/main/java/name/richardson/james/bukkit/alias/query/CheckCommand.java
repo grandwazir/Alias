@@ -21,55 +21,49 @@ import name.richardson.james.bukkit.utilities.formatters.ChoiceFormatter;
 @ConsoleCommand
 public final class CheckCommand extends AbstractCommand {
 
-  private final DateFormat dateFormatter = new SimpleDateFormat("MMM d, yyyy @ K:mm a (z)");
-  
   private final ChoiceFormatter choiceFormatter;
-  
-  private String playerName;
-  
-  private AliasHandler handler;
 
-  private EbeanServer database;
-  
-  public CheckCommand(Alias plugin) {
+  private final EbeanServer database;
+
+  private final DateFormat dateFormatter = new SimpleDateFormat("MMM d, yyyy @ K:mm a (z)");
+
+  private final AliasHandler handler;
+
+  private String playerName;
+
+  public CheckCommand(final Alias plugin) {
     super(plugin, false);
     this.handler = plugin.getHandler();
     this.database = plugin.getDatabase();
     this.choiceFormatter = new ChoiceFormatter(this.getLocalisation());
     this.choiceFormatter.setMessage(this, "header");
-    this.choiceFormatter.setLimits(0,1,2);
-    this.choiceFormatter.setFormats(
-      this.getLocalisation().getMessage(this, "no-names"),
-      this.getLocalisation().getMessage(this, "one-name"),
-      this.getLocalisation().getMessage(this, "many-names")
-    );
+    this.choiceFormatter.setLimits(0, 1, 2);
+    this.choiceFormatter.setFormats(this.getLocalisation().getMessage(this, "no-names"), this.getLocalisation().getMessage(this, "one-name"), this.getLocalisation().getMessage(this, "many-names"));
   }
 
-  public void execute(CommandSender sender) throws CommandArgumentException, CommandPermissionException, CommandUsageException {
-    this.getLogger().info(this, "used", sender.getName(), playerName);
-    if (PlayerNameRecord.isPlayerKnown(database, playerName)) {
-      final List<PlayerNameRecord> alias = handler.getPlayersNames(playerName);
+  public void execute(final CommandSender sender) throws CommandArgumentException, CommandPermissionException, CommandUsageException {
+    this.getLogger().info(this, "used", sender.getName(), this.playerName);
+    if (PlayerNameRecord.isPlayerKnown(this.database, this.playerName)) {
+      final List<PlayerNameRecord> alias = this.handler.getPlayersNames(this.playerName);
       if (!alias.isEmpty()) {
-        this.choiceFormatter.setArguments(alias.size(), playerName);
+        this.choiceFormatter.setArguments(alias.size(), this.playerName);
         sender.sendMessage(this.choiceFormatter.getMessage());
-        for (PlayerNameRecord record : alias) {
-          String message = this.getLocalisation().getMessage(this, "list-item", record.getPlayerName(), this.dateFormatter.format(record.getLastSeen()));
+        for (final PlayerNameRecord record : alias) {
+          final String message = this.getLocalisation().getMessage(this, "list-item", record.getPlayerName(), this.dateFormatter.format(record.getLastSeen()));
           sender.sendMessage(message);
         }
-      } 
+      }
     } else {
       sender.sendMessage(this.getLocalisation().getMessage(this, "no-names-found"));
     }
   }
 
-  public void parseArguments(String[] arguments, CommandSender sender) throws CommandArgumentException {
+  public void parseArguments(final String[] arguments, final CommandSender sender) throws CommandArgumentException {
     if (arguments.length == 0) {
       this.playerName = sender.getName();
     } else {
       this.playerName = arguments[0];
     }
   }
-  
-  
 
 }

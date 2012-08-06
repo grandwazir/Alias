@@ -68,7 +68,9 @@ public class PlayerNameRecord {
   @ManyToMany(cascade = CascadeType.PERSIST)
   @JoinTable(name = "alias_players_addresses")
   public List<InetAddressRecord> getAddresses() {
-    if (this.addresses == null) return Collections.emptyList();
+    if (this.addresses == null) {
+      return Collections.emptyList();
+    }
     return this.addresses;
   }
 

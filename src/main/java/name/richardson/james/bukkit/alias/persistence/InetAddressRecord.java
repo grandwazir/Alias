@@ -82,7 +82,9 @@ public class InetAddressRecord {
 
   @ManyToMany(targetEntity = PlayerNameRecord.class, cascade = CascadeType.PERSIST)
   public List<PlayerNameRecord> getPlayerNames() {
-    if (this.playerNames == null) return Collections.emptyList();
+    if (this.playerNames == null) {
+      return Collections.emptyList();
+    }
     return this.playerNames;
   }
 
