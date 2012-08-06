@@ -19,7 +19,7 @@ package name.richardson.james.bukkit.alias;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.PlayerPreLoginEvent;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 
 import name.richardson.james.bukkit.utilities.listener.LoggableListener;
 
@@ -34,7 +34,7 @@ public class PlayerListener extends LoggableListener {
   }
 
   @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-  public void onPlayerLogin(final PlayerPreLoginEvent event) {
+  public void onPlayerLogin(final AsyncPlayerPreLoginEvent event) {
     final String playerName = event.getName();
     final String address = event.getAddress().toString();
     this.handler.associatePlayer(playerName, address);
