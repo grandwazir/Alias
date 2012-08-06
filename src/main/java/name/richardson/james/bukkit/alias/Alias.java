@@ -33,27 +33,29 @@ import name.richardson.james.bukkit.utilities.plugin.AbstractPlugin;
 
 public class Alias extends AbstractPlugin {
 
+  /** The handler for this plugin */
+  private AliasHandler handler;
+
   /** The backend SQLStorage. */
   private SQLStorage storage;
-  
-  private AliasHandler handler;
 
   /**
    * Gets the artifact id.
-   *
+   * 
    * @return the artifact id
    */
   public String getArtifactID() {
     return "alias";
   }
-  
+
+  @Override
   public EbeanServer getDatabase() {
-    return storage.getEbeanServer();
+    return this.storage.getEbeanServer();
   }
 
   /**
    * Gets the database classes.
-   *
+   * 
    * @return the database classes
    */
   @Override
@@ -66,16 +68,17 @@ public class Alias extends AbstractPlugin {
 
   /**
    * Gets the group id.
-   *
+   * 
    * @return the group id
    */
+  @Override
   public String getGroupID() {
     return "name.richardson.james.bukkit";
   }
 
   /**
    * Gets the handler.
-   *
+   * 
    * @param parentClass the parent class
    * @return the handler
    */
@@ -83,9 +86,23 @@ public class Alias extends AbstractPlugin {
     if (this.handler == null) {
       this.handler = new AliasHandler(this);
     }
-    return handler;
+    return this.handler;
   }
 
+  /**
+   * Setup persistence.
+   * 
+   * @throws SQLException the sQL exception
+   */
+  @Override
+  protected void establishPersistence() throws SQLException {
+    try {
+      this.storage = new SQLStorage(this, new DatabaseConfiguration(this), this.getDatabaseClasses());
+      this.storage.initalise();
+    } catch (final IOException e) {
+      e.printStackTrace();
+    }
+  }
 
   /**
    * Register commands.
@@ -104,21 +121,6 @@ public class Alias extends AbstractPlugin {
   @Override
   protected void registerListeners() {
     this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
-  }
-
-  /**
-   * Setup persistence.
-   *
-   * @throws SQLException the sQL exception
-   */
-  @Override
-  protected void establishPersistence() throws SQLException {
-    try {
-      this.storage = new SQLStorage(this, new DatabaseConfiguration(this), this.getDatabaseClasses());
-      this.storage.initalise();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
 }

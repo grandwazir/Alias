@@ -52,17 +52,17 @@ public class InetAddressRecord {
     }
   }
 
-  @ManyToMany(mappedBy = "addresses")
-  private List<PlayerNameRecord> playerNames;
+  @NotNull
+  private String address;
 
   @Id
   private int id;
 
   @NotNull
-  private String address;
-
-  @NotNull
   private long lastSeen;
+
+  @ManyToMany(mappedBy = "addresses")
+  private List<PlayerNameRecord> playerNames;
 
   public String getAddress() {
     return this.address;
@@ -76,7 +76,7 @@ public class InetAddressRecord {
     return this.lastSeen;
   }
 
-  @ManyToMany(targetEntity = PlayerNameRecord.class, cascade=CascadeType.PERSIST)
+  @ManyToMany(targetEntity = PlayerNameRecord.class, cascade = CascadeType.PERSIST)
   public List<PlayerNameRecord> getPlayerNames() {
     return this.playerNames;
   }

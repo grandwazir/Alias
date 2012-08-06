@@ -24,10 +24,10 @@ import org.bukkit.event.player.PlayerPreLoginEvent;
 import name.richardson.james.bukkit.utilities.listener.LoggableListener;
 
 public class PlayerListener extends LoggableListener {
-  
+
   /** The handler for this listener */
   private final AliasHandler handler;
-  
+
   public PlayerListener(final Alias alias) {
     super(alias);
     this.handler = alias.getHandler();

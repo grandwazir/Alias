@@ -30,42 +30,20 @@ import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
 import name.richardson.james.bukkit.utilities.logging.Logger;
 
 public final class AliasHandler {
-  
+
   private final EbeanServer database;
-  
+
   private final Logger logger;
-  
+
   public AliasHandler(final Alias plugin) {
     this.logger = plugin.getCustomLogger();
     this.database = plugin.getDatabase();
   }
 
-  public List<String> getIPAddresses(final Player player) {
-    return this.getIPAddresses(player.getName());
-  }
-
-  public List<String> getIPAddresses(final String playerName) {
-    final List<String> list = new ArrayList<String>();
-    final PlayerNameRecord records = PlayerNameRecord.findByName(database, playerName);
-    for (final InetAddressRecord record : records.getAddresses()) {
-      list.add(record.getAddress());
-    }
-    return list;
-  }
-
-  public List<String> getPlayersNames(final InetAddress ip) {
-    final List<String> list = new ArrayList<String>();
-    final InetAddressRecord records = InetAddressRecord.findByAddress(database, ip.getHostAddress());
-    for (final PlayerNameRecord record : records.getPlayerNames()) {
-      list.add(record.getPlayerName());
-    }
-    return list;
-  }
-  
-  public void associatePlayer(String playerName, String address) {
+  public void associatePlayer(final String playerName, final String address) {
     this.logger.debug(this, "associate-player", playerName, address);
-    final PlayerNameRecord playerNameRecord = PlayerNameRecord.findByName(database, playerName);
-    final InetAddressRecord inetAddressRecord = InetAddressRecord.findByAddress(database, address);
+    final PlayerNameRecord playerNameRecord = PlayerNameRecord.findByName(this.database, playerName);
+    final InetAddressRecord inetAddressRecord = InetAddressRecord.findByAddress(this.database, address);
     final long now = System.currentTimeMillis();
     playerNameRecord.setLastSeen(now);
     inetAddressRecord.setLastSeen(now);
@@ -75,21 +53,44 @@ public final class AliasHandler {
       playerNameRecord.getAddresses().add(inetAddressRecord);
     }
 
-    database.save(playerNameRecord);
+    this.database.save(playerNameRecord);
   }
-  
-  public void deassociatePlayer(String playerName, String alias) {
+
+  public void deassociatePlayer(final String playerName, final String alias) {
     this.logger.debug(this, "deassociate-player", playerName, alias);
-    if (PlayerNameRecord.isPlayerKnown(database, playerName) && PlayerNameRecord.isPlayerKnown(database, alias)) return;
-    final PlayerNameRecord playerRecord = PlayerNameRecord.findByName(database, playerName);
-    final PlayerNameRecord aliasRecord  = PlayerNameRecord.findByName(database, alias);
-    for (InetAddressRecord record : aliasRecord.getAddresses()) {
+    if (PlayerNameRecord.isPlayerKnown(this.database, playerName) && PlayerNameRecord.isPlayerKnown(this.database, alias)) {
+      return;
+    }
+    final PlayerNameRecord playerRecord = PlayerNameRecord.findByName(this.database, playerName);
+    final PlayerNameRecord aliasRecord = PlayerNameRecord.findByName(this.database, alias);
+    for (final InetAddressRecord record : aliasRecord.getAddresses()) {
       if (playerRecord.getAddresses().contains(record)) {
         playerRecord.getAddresses().remove(record);
       }
     }
-    database.save(playerRecord);
+    this.database.save(playerRecord);
   }
-  
+
+  public List<String> getIPAddresses(final Player player) {
+    return this.getIPAddresses(player.getName());
+  }
+
+  public List<String> getIPAddresses(final String playerName) {
+    final List<String> list = new ArrayList<String>();
+    final PlayerNameRecord records = PlayerNameRecord.findByName(this.database, playerName);
+    for (final InetAddressRecord record : records.getAddresses()) {
+      list.add(record.getAddress());
+    }
+    return list;
+  }
+
+  public List<String> getPlayersNames(final InetAddress ip) {
+    final List<String> list = new ArrayList<String>();
+    final InetAddressRecord records = InetAddressRecord.findByAddress(this.database, ip.getHostAddress());
+    for (final PlayerNameRecord record : records.getPlayerNames()) {
+      list.add(record.getPlayerName());
+    }
+    return list;
+  }
 
 }

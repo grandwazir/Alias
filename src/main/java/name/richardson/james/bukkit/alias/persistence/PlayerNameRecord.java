@@ -54,21 +54,23 @@ public class PlayerNameRecord {
     }
   }
 
+  private List<InetAddressRecord> addresses;
+
   @Id
   private int id;
 
   @NotNull
-  private String playerName;
-
-  @NotNull
   private long lastSeen;
 
-  public List<InetAddressRecord> addresses;
+  @NotNull
+  private String playerName;
 
   @ManyToMany(cascade = CascadeType.PERSIST)
   @JoinTable(name = "alias_players_addresses")
   public List<InetAddressRecord> getAddresses() {
-    if (this.addresses == null) return new LinkedList<InetAddressRecord>();
+    if (this.addresses == null) {
+      return new LinkedList<InetAddressRecord>();
+    }
     return this.addresses;
   }
 
