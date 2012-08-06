@@ -1,5 +1,8 @@
 Changelog for Alias (v1.1.2-SNAPSHOT)
 
+2012-08-06 01:23:43 +0100    convert to using async event (James Richardson)
+2012-08-06 01:23:14 +0100    code clean up (James Richardson)
+2012-08-06 01:21:40 +0100    implement api (James Richardson)
 2012-08-06 00:35:55 +0100    will reimplement once database testing is complete (James Richardson)
 2012-08-06 00:30:24 +0100    update to AbstractPlugin and new frameworks (James Richardson)
 

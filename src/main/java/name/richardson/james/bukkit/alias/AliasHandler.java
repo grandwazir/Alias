@@ -71,26 +71,27 @@ public final class AliasHandler {
     this.database.save(playerRecord);
   }
 
-  public List<String> getIPAddresses(final Player player) {
+  public List<InetAddressRecord> getIPAddresses(final Player player) {
     return this.getIPAddresses(player.getName());
   }
 
-  public List<String> getIPAddresses(final String playerName) {
-    final List<String> list = new ArrayList<String>();
-    final PlayerNameRecord records = PlayerNameRecord.findByName(this.database, playerName);
-    for (final InetAddressRecord record : records.getAddresses()) {
-      list.add(record.getAddress());
+  public List<InetAddressRecord> getIPAddresses(final String playerName) {
+    final PlayerNameRecord record = PlayerNameRecord.findByName(this.database, playerName);
+    return record.getAddresses();
+  }
+  
+  public List<PlayerNameRecord> getPlayersNames(final String playerName) {
+    final PlayerNameRecord record = PlayerNameRecord.findByName(this.database, playerName);
+    final List<PlayerNameRecord> records = new ArrayList<PlayerNameRecord>();
+    for (InetAddressRecord address : record.getAddresses()) {
+      records.addAll(address.getPlayerNames());
     }
-    return list;
+    return records;
   }
 
-  public List<String> getPlayersNames(final InetAddress ip) {
-    final List<String> list = new ArrayList<String>();
-    final InetAddressRecord records = InetAddressRecord.findByAddress(this.database, ip.getHostAddress());
-    for (final PlayerNameRecord record : records.getPlayerNames()) {
-      list.add(record.getPlayerName());
-    }
-    return list;
+  public List<PlayerNameRecord> getPlayersNames(final InetAddress ip) {
+    final InetAddressRecord record = InetAddressRecord.findByAddress(this.database, ip.getHostAddress());
+    return record.getPlayerNames();
   }
 
 }

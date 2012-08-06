@@ -17,6 +17,7 @@
  ******************************************************************************/
 package name.richardson.james.bukkit.alias.persistence;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -78,6 +79,7 @@ public class InetAddressRecord {
 
   @ManyToMany(targetEntity = PlayerNameRecord.class, cascade = CascadeType.PERSIST)
   public List<PlayerNameRecord> getPlayerNames() {
+    if (this.playerNames == null) return Collections.emptyList();
     return this.playerNames;
   }
 

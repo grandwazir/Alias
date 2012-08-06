@@ -17,7 +17,7 @@
  ******************************************************************************/
 package name.richardson.james.bukkit.alias.persistence;
 
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -68,9 +68,7 @@ public class PlayerNameRecord {
   @ManyToMany(cascade = CascadeType.PERSIST)
   @JoinTable(name = "alias_players_addresses")
   public List<InetAddressRecord> getAddresses() {
-    if (this.addresses == null) {
-      return new LinkedList<InetAddressRecord>();
-    }
+    if (this.addresses == null) return Collections.emptyList();
     return this.addresses;
   }
 
