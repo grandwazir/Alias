@@ -21,7 +21,7 @@ import name.richardson.james.bukkit.utilities.formatters.ChoiceFormatter;
 @ConsoleCommand
 public final class CheckCommand extends AbstractCommand {
 
-  private final DateFormat dateFormatter = new SimpleDateFormat("MMM d, yyyy @ K:mm a, (z)");
+  private final DateFormat dateFormatter = new SimpleDateFormat("MMM d, yyyy @ K:mm a (z)");
   
   private final ChoiceFormatter choiceFormatter;
   

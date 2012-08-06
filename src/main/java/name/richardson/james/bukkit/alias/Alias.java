@@ -27,6 +27,7 @@ import com.avaje.ebean.EbeanServer;
 import name.richardson.james.bukkit.alias.persistence.InetAddressRecord;
 import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
 import name.richardson.james.bukkit.alias.query.CheckCommand;
+import name.richardson.james.bukkit.alias.query.DeleteCommand;
 import name.richardson.james.bukkit.utilities.command.CommandManager;
 import name.richardson.james.bukkit.utilities.configuration.DatabaseConfiguration;
 import name.richardson.james.bukkit.utilities.persistence.SQLStorage;
@@ -113,7 +114,7 @@ public class Alias extends AbstractPlugin {
     final CommandManager manager = new CommandManager(this);
     this.getCommand("as").setExecutor(manager);
     manager.addCommand(new CheckCommand(this));
-    // manager.addCommand(new DeleteCommand(this));
+    manager.addCommand(new DeleteCommand(this));
   }
 
   /**

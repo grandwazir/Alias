@@ -44,9 +44,8 @@ public final class AliasHandler {
     this.logger.debug(this, "associate-player", playerName, address);
     final PlayerNameRecord playerNameRecord = PlayerNameRecord.findByName(this.database, playerName);
     final InetAddressRecord inetAddressRecord = InetAddressRecord.findByAddress(this.database, address);
-    final long now = System.currentTimeMillis();
-    playerNameRecord.setLastSeen(now);
-    inetAddressRecord.setLastSeen(now);
+    playerNameRecord.updateLastSeen();
+    inetAddressRecord.updateLastSeen();
 
     // link IP address to name
     if (!playerNameRecord.getAddresses().contains(inetAddressRecord)) {
