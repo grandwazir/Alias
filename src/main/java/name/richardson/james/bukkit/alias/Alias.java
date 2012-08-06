@@ -35,6 +35,8 @@ public class Alias extends AbstractPlugin {
 
   /** The backend SQLStorage. */
   private SQLStorage storage;
+  
+  private AliasHandler handler;
 
   /**
    * Gets the artifact id.
@@ -77,8 +79,11 @@ public class Alias extends AbstractPlugin {
    * @param parentClass the parent class
    * @return the handler
    */
-  public AliasHandler getHandler(final Class<?> parentClass) {
-    return new AliasHandler(parentClass, this);
+  public AliasHandler getHandler() {
+    if (this.handler == null) {
+      this.handler = new AliasHandler(this);
+    }
+    return handler;
   }
 
 
@@ -110,6 +115,7 @@ public class Alias extends AbstractPlugin {
   protected void establishPersistence() throws SQLException {
     try {
       this.storage = new SQLStorage(this, new DatabaseConfiguration(this), this.getDatabaseClasses());
+      this.storage.initalise();
     } catch (IOException e) {
       e.printStackTrace();
     }

@@ -18,8 +18,8 @@
 package name.richardson.james.bukkit.alias;
 
 import java.net.InetAddress;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.avaje.ebean.EbeanServer;
 
@@ -27,57 +27,59 @@ import org.bukkit.entity.Player;
 
 import name.richardson.james.bukkit.alias.persistence.InetAddressRecord;
 import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
+import name.richardson.james.bukkit.utilities.logging.Logger;
 
-public class AliasHandler implements AliasAPI {
+public final class AliasHandler {
   
   private final EbeanServer database;
   
-  public AliasHandler(final Class<?> parentClass, final Alias plugin) {
+  private final Logger logger;
+  
+  public AliasHandler(final Alias plugin) {
+    this.logger = plugin.getCustomLogger();
     this.database = plugin.getDatabase();
   }
 
-  public Set<String> getIPAddresses(final Player player) {
+  public List<String> getIPAddresses(final Player player) {
     return this.getIPAddresses(player.getName());
   }
 
-  public Set<String> getIPAddresses(final String playerName) {
-    final Set<String> set = new HashSet<String>();
+  public List<String> getIPAddresses(final String playerName) {
+    final List<String> list = new ArrayList<String>();
     final PlayerNameRecord records = PlayerNameRecord.findByName(database, playerName);
     for (final InetAddressRecord record : records.getAddresses()) {
-      set.add(record.getAddress());
+      list.add(record.getAddress());
     }
-    return set;
+    return list;
   }
 
-  public Set<String> getPlayersNames(final InetAddress ip) {
-    final Set<String> set = new HashSet<String>();
+  public List<String> getPlayersNames(final InetAddress ip) {
+    final List<String> list = new ArrayList<String>();
     final InetAddressRecord records = InetAddressRecord.findByAddress(database, ip.getHostAddress());
     for (final PlayerNameRecord record : records.getPlayerNames()) {
-      set.add(record.getPlayerName());
+      list.add(record.getPlayerName());
     }
-    return set;
+    return list;
   }
   
   public void associatePlayer(String playerName, String address) {
-    // logger.debug("Associating " + playerName + "with address " + address);
+    this.logger.debug(this, "associate-player", playerName, address);
     final PlayerNameRecord playerNameRecord = PlayerNameRecord.findByName(database, playerName);
     final InetAddressRecord inetAddressRecord = InetAddressRecord.findByAddress(database, address);
-    // update time stamps
     final long now = System.currentTimeMillis();
     playerNameRecord.setLastSeen(now);
     inetAddressRecord.setLastSeen(now);
-    // this.logger.debug(playerNameRecord.getAddresses().toString());
 
     // link IP address to name
     if (!playerNameRecord.getAddresses().contains(inetAddressRecord)) {
       playerNameRecord.getAddresses().add(inetAddressRecord);
-      // this.logger.debug(playerNameRecord.getAddresses().toString());
     }
 
     database.save(playerNameRecord);
   }
   
   public void deassociatePlayer(String playerName, String alias) {
+    this.logger.debug(this, "deassociate-player", playerName, alias);
     if (PlayerNameRecord.isPlayerKnown(database, playerName) && PlayerNameRecord.isPlayerKnown(database, alias)) return;
     final PlayerNameRecord playerRecord = PlayerNameRecord.findByName(database, playerName);
     final PlayerNameRecord aliasRecord  = PlayerNameRecord.findByName(database, alias);
