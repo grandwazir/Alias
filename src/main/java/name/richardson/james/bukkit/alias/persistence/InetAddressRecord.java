@@ -40,6 +40,7 @@ public class InetAddressRecord {
     InetAddressRecord record = database.find(InetAddressRecord.class).where().eq("address", address).findUnique();
     if (record == null) {
       record = new InetAddressRecord();
+      record.updateLastSeen();
       record.setAddress(address);
       database.save(record);
       record = database.find(InetAddressRecord.class).where().eq("address", address).findUnique();
@@ -62,6 +63,7 @@ public class InetAddressRecord {
   @Id
   private int id;
 
+  @NotNull
   @Temporal(TemporalType.TIMESTAMP)
   private Timestamp lastSeen;
 

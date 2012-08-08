@@ -41,6 +41,7 @@ public class PlayerNameRecord {
     PlayerNameRecord record = database.find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
     if (record == null) {
       record = new PlayerNameRecord();
+      record.updateLastSeen();
       record.setPlayerName(playerName);
       database.save(record);
       record = database.find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();

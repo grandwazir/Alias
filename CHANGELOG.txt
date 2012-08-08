@@ -1,5 +1,6 @@
 Changelog for Alias (v1.2.0-SNAPSHOT)
 
+2012-08-08 05:25:43 +0100    timestamp last_seen (James Richardson)
 2012-08-08 05:00:09 +0100    display header even if no names returned (James Richardson)
 2012-08-08 04:59:46 +0100    deassociate players correctly (James Richardson)
 2012-08-08 04:01:56 +0100    save both records (James Richardson)
