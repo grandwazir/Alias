@@ -18,8 +18,9 @@
 package name.richardson.james.bukkit.alias;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import com.avaje.ebean.EbeanServer;
 
@@ -70,23 +71,23 @@ public final class AliasHandler {
     this.database.save(playerRecord);
   }
 
-  public List<InetAddressRecord> getIPAddresses(final Player player) {
+  public Collection<InetAddressRecord> getIPAddresses(final Player player) {
     return this.getIPAddresses(player.getName());
   }
 
-  public List<InetAddressRecord> getIPAddresses(final String playerName) {
+  public Collection<InetAddressRecord> getIPAddresses(final String playerName) {
     final PlayerNameRecord record = PlayerNameRecord.findByName(this.database, playerName);
-    return record.getAddresses();
+    return new LinkedHashSet<InetAddressRecord>(record.getAddresses());
   }
 
-  public List<PlayerNameRecord> getPlayersNames(final InetAddress ip) {
+  public Collection<PlayerNameRecord> getPlayersNames(final InetAddress ip) {
     final InetAddressRecord record = InetAddressRecord.findByAddress(this.database, ip.getHostAddress());
-    return record.getPlayerNames();
+    return new LinkedHashSet<PlayerNameRecord>(record.getPlayerNames());
   }
 
-  public List<PlayerNameRecord> getPlayersNames(final String playerName) {
+  public Collection<PlayerNameRecord> getPlayersNames(final String playerName) {
     final PlayerNameRecord record = PlayerNameRecord.findByName(this.database, playerName);
-    final List<PlayerNameRecord> records = new ArrayList<PlayerNameRecord>();
+    final Set<PlayerNameRecord> records = new LinkedHashSet<PlayerNameRecord>();
     for (final InetAddressRecord address : record.getAddresses()) {
       records.addAll(address.getPlayerNames());
     }
