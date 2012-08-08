@@ -1,5 +1,6 @@
 Changelog for Alias (v1.2.0-SNAPSHOT)
 
+2012-08-07 00:11:00 +0100    preparing for snapshot release (James Richardson)
 2012-08-06 02:34:24 +0100    reimplement delete command (James Richardson)
 2012-08-06 02:18:08 +0100    reimplemented checkcommand (James Richardson)
 2012-08-06 01:23:43 +0100    convert to using async event (James Richardson)
