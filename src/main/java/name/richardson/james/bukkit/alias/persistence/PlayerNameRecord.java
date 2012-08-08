@@ -17,6 +17,7 @@
  ******************************************************************************/
 package name.richardson.james.bukkit.alias.persistence;
 
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,6 +27,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.validation.NotNull;
@@ -60,7 +63,8 @@ public class PlayerNameRecord {
   private int id;
 
   @NotNull
-  private long lastSeen;
+  @Temporal(TemporalType.TIMESTAMP)
+  private Timestamp lastSeen;
 
   @NotNull
   private String playerName;
@@ -78,7 +82,7 @@ public class PlayerNameRecord {
     return this.id;
   }
 
-  public long getLastSeen() {
+  public Timestamp getLastSeen() {
     return this.lastSeen;
   }
 
@@ -94,7 +98,7 @@ public class PlayerNameRecord {
     this.id = id;
   }
 
-  public void setLastSeen(final long lastSeen) {
+  public void setLastSeen(final Timestamp lastSeen) {
     this.lastSeen = lastSeen;
   }
 
@@ -103,7 +107,7 @@ public class PlayerNameRecord {
   }
 
   public void updateLastSeen() {
-    this.lastSeen = System.currentTimeMillis();
+    this.lastSeen = new Timestamp(System.currentTimeMillis());
   }
 
 }
