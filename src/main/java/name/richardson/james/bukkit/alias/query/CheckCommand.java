@@ -45,9 +45,9 @@ public final class CheckCommand extends AbstractCommand {
     this.getLogger().info(this, "used", sender.getName(), this.playerName);
     if (PlayerNameRecord.isPlayerKnown(this.database, this.playerName)) {
       final Collection<PlayerNameRecord> alias = this.handler.getPlayersNames(this.playerName);
+      this.choiceFormatter.setArguments(alias.size(), this.playerName);
+      sender.sendMessage(this.choiceFormatter.getMessage());
       if (!alias.isEmpty()) {
-        this.choiceFormatter.setArguments(alias.size(), this.playerName);
-        sender.sendMessage(this.choiceFormatter.getMessage());
         for (final PlayerNameRecord record : alias) {
           final String message = this.getLocalisation().getMessage(this, "list-item", record.getPlayerName(), this.dateFormatter.format(record.getLastSeen()));
           sender.sendMessage(message);
