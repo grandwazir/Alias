@@ -19,6 +19,7 @@ package name.richardson.james.bukkit.alias;
 
 import java.net.InetAddress;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -63,9 +64,11 @@ public final class AliasHandler {
     }
     final PlayerNameRecord playerRecord = PlayerNameRecord.findByName(this.database, playerName);
     final PlayerNameRecord aliasRecord = PlayerNameRecord.findByName(this.database, alias);
-    for (final InetAddressRecord record : aliasRecord.getAddresses()) {
+    final Set<InetAddressRecord> addresses = new HashSet<InetAddressRecord>(aliasRecord.getAddresses());
+    for (final InetAddressRecord record : addresses) {
       if (playerRecord.getAddresses().contains(record)) {
         playerRecord.getAddresses().remove(record);
+        aliasRecord.getAddresses().remove(record);
       }
     }
     this.database.save(playerRecord);
