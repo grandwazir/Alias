@@ -2,7 +2,7 @@ package name.richardson.james.bukkit.alias.query;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
+import java.util.Collection;
 
 import com.avaje.ebean.EbeanServer;
 
@@ -44,7 +44,7 @@ public final class CheckCommand extends AbstractCommand {
   public void execute(final CommandSender sender) throws CommandArgumentException, CommandPermissionException, CommandUsageException {
     this.getLogger().info(this, "used", sender.getName(), this.playerName);
     if (PlayerNameRecord.isPlayerKnown(this.database, this.playerName)) {
-      final List<PlayerNameRecord> alias = this.handler.getPlayersNames(this.playerName);
+      final Collection<PlayerNameRecord> alias = this.handler.getPlayersNames(this.playerName);
       if (!alias.isEmpty()) {
         this.choiceFormatter.setArguments(alias.size(), this.playerName);
         sender.sendMessage(this.choiceFormatter.getMessage());
