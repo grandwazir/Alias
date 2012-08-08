@@ -1,5 +1,10 @@
 Changelog for Alias (v1.2.0-SNAPSHOT)
 
+2012-08-08 04:01:56 +0100    save both records (James Richardson)
+2012-08-08 03:57:31 +0100    support new handler (James Richardson)
+2012-08-08 03:56:34 +0100    deassociate both players from each other (James Richardson)
+2012-08-08 03:38:16 +0100    change to Collection from List fixes #1 (James Richardson)
+2012-08-08 03:04:00 +0100    changelog (James Richardson)
 2012-08-07 00:11:00 +0100    preparing for snapshot release (James Richardson)
 2012-08-06 02:34:24 +0100    reimplement delete command (James Richardson)
 2012-08-06 02:18:08 +0100    reimplemented checkcommand (James Richardson)

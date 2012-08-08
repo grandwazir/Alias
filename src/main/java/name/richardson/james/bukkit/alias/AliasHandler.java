@@ -21,6 +21,7 @@ import java.net.InetAddress;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.avaje.ebean.EbeanServer;
@@ -58,21 +59,17 @@ public final class AliasHandler {
   }
 
   public void deassociatePlayer(final String playerName, final String alias) {
+    if (!PlayerNameRecord.isPlayerKnown(this.database, playerName) || !PlayerNameRecord.isPlayerKnown(this.database, alias)) return;
     this.logger.debug(this, "deassociate-player", playerName, alias);
-    if (PlayerNameRecord.isPlayerKnown(this.database, playerName) && PlayerNameRecord.isPlayerKnown(this.database, alias)) {
-      return;
-    }
     final PlayerNameRecord playerRecord = PlayerNameRecord.findByName(this.database, playerName);
     final PlayerNameRecord aliasRecord = PlayerNameRecord.findByName(this.database, alias);
-    final Set<InetAddressRecord> addresses = new HashSet<InetAddressRecord>(aliasRecord.getAddresses());
-    for (final InetAddressRecord record : addresses) {
-      if (playerRecord.getAddresses().contains(record)) {
-        playerRecord.getAddresses().remove(record);
-        aliasRecord.getAddresses().remove(record);
+    System.out.print(playerRecord.getAddresses().size());
+    for (final InetAddressRecord address : playerRecord.getAddresses()) {
+      if (address.getPlayerNames().contains(aliasRecord)) {
+        aliasRecord.getAddresses().remove(address);
       }
     }
-    this.database.save(aliasRecord);
-    this.database.save(playerRecord);
+    database.save(aliasRecord);
   }
 
   public Collection<InetAddressRecord> getIPAddresses(final Player player) {
