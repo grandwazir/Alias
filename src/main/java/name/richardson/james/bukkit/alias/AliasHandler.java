@@ -71,6 +71,7 @@ public final class AliasHandler {
         aliasRecord.getAddresses().remove(record);
       }
     }
+    this.database.save(aliasRecord);
     this.database.save(playerRecord);
   }
 
