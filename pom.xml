@@ -7,7 +7,7 @@
 
   <parent>
      <groupId>name.richardson.james.bukkit</groupId>
-     <artifactId>parent-pom</artifactId>
+     <artifactId>default-pom</artifactId>
      <version>3</version>
   </parent>
 
@@ -15,7 +15,7 @@
      <dependency>
            <groupId>name.richardson.james.bukkit</groupId>
            <artifactId>bukkit-utilities</artifactId>
-           <version>4.1.0</version>
+           <version>4.2.1</version>
      </dependency>
   </dependencies>
 
