@@ -3,9 +3,11 @@ package name.richardson.james.bukkit.alias.query;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.List;
 
 import com.avaje.ebean.EbeanServer;
 
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import name.richardson.james.bukkit.alias.Alias;
@@ -32,7 +34,7 @@ public final class CheckCommand extends AbstractCommand {
   private String playerName;
 
   public CheckCommand(final Alias plugin) {
-    super(plugin, false);
+    super(plugin);
     this.handler = plugin.getHandler();
     this.database = plugin.getDatabase();
     this.choiceFormatter = new ChoiceFormatter(this.getLocalisation());
@@ -42,7 +44,6 @@ public final class CheckCommand extends AbstractCommand {
   }
 
   public void execute(final CommandSender sender) throws CommandArgumentException, CommandPermissionException, CommandUsageException {
-    this.getLogger().info(this, "used", sender.getName(), this.playerName);
     if (PlayerNameRecord.isPlayerKnown(this.database, this.playerName)) {
       final Collection<PlayerNameRecord> alias = this.handler.getPlayersNames(this.playerName);
       this.choiceFormatter.setArguments(alias.size(), this.playerName);

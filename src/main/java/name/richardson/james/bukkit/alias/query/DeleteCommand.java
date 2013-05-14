@@ -20,14 +20,13 @@ public final class DeleteCommand extends AbstractCommand {
   private String targetName;
 
   public DeleteCommand(final Alias plugin) {
-    super(plugin, false);
+    super(plugin);
     this.handler = plugin.getHandler();
   }
 
   public void execute(final CommandSender sender) throws CommandArgumentException, CommandPermissionException, CommandUsageException {
     this.handler.deassociatePlayer(this.playerName, this.targetName);
     sender.sendMessage(this.getLocalisation().getMessage(this, "dessociated-player", this.playerName, this.targetName));
-    this.getLogger().info(this, "used", this.playerName, this.targetName, sender.getName());
   }
 
   public void parseArguments(final String[] arguments, final CommandSender sender) throws CommandArgumentException {

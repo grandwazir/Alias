@@ -44,7 +44,7 @@ public final class AliasHandler {
   }
 
   public void associatePlayer(final String playerName, final String address) {
-    this.logger.debug(this, "associate-player", playerName, address);
+    this.logger.debug(this, String.format("Associating %s with address %s", playerName, address));
     final PlayerNameRecord playerNameRecord = PlayerNameRecord.findByName(this.database, playerName);
     final InetAddressRecord inetAddressRecord = InetAddressRecord.findByAddress(this.database, address);
     playerNameRecord.updateLastSeen();
@@ -60,7 +60,7 @@ public final class AliasHandler {
 
   public void deassociatePlayer(final String playerName, final String alias) {
     if (!PlayerNameRecord.isPlayerKnown(this.database, playerName) || !PlayerNameRecord.isPlayerKnown(this.database, alias)) return;
-    this.logger.debug(this, "deassociate-player", playerName, alias);
+    this.logger.debug(this, String.format("Deassociating %s with alias %s", playerName, alias));
     final PlayerNameRecord playerRecord = PlayerNameRecord.findByName(this.database, playerName);
     final PlayerNameRecord aliasRecord = PlayerNameRecord.findByName(this.database, alias);
     System.out.print(playerRecord.getAddresses().size());
