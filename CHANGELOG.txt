@@ -1,5 +1,11 @@
-Changelog for Alias (v1.2.0-SNAPSHOT)
+Changelog for Alias (v1.2.1-SNAPSHOT)
 
+2013-05-15 00:08:04 +0100    added tab completion to database (James Richardson)
+2013-05-15 00:01:35 +0100    begin process to upgrade to BukkitUtilities 4.2.1 (James Richardson)
+2013-05-14 23:56:20 +0100    update pom (James Richardson)
+
+v1.2.0
+2012-08-08 05:41:01 +0100    fix time formatting issues (James Richardson)
 2012-08-08 05:25:43 +0100    timestamp last_seen (James Richardson)
 2012-08-08 05:00:09 +0100    display header even if no names returned (James Richardson)
 2012-08-08 04:59:46 +0100    deassociate players correctly (James Richardson)
