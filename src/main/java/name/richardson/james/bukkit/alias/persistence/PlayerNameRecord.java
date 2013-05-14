@@ -18,8 +18,11 @@
 package name.richardson.james.bukkit.alias.persistence;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -47,6 +50,17 @@ public class PlayerNameRecord {
       record = database.find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
     }
     return record;
+  }
+  
+  public static List<String> getPlayersThatStartWith(final EbeanServer database, String name) {
+    List<String> names = new ArrayList<String>();
+    Set<String> temp = new LinkedHashSet<String>();
+    List<PlayerNameRecord> records = database.find(PlayerNameRecord.class).where().istartsWith("player.name", name).findList();
+    for (PlayerNameRecord record : records) {
+      temp.add(record.getPlayerName());
+    }
+    names.addAll(temp);
+    return names;
   }
 
   public static boolean isPlayerKnown(final EbeanServer database, final String playerName) {

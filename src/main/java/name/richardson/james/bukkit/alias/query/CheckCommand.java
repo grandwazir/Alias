@@ -2,13 +2,16 @@ package name.richardson.james.bukkit.alias.query;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import com.avaje.ebean.EbeanServer;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import name.richardson.james.bukkit.alias.Alias;
 import name.richardson.james.bukkit.alias.AliasHandler;
@@ -65,6 +68,23 @@ public final class CheckCommand extends AbstractCommand {
     } else {
       this.playerName = arguments[0];
     }
+  }
+  
+  public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] arguments) {
+    List<String> list = new ArrayList<String>();
+    if (arguments.length <= 1) {
+      for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+        if (arguments.length < 1) {
+          list.add(player.getName());
+        } else if (player.getName().startsWith(arguments[0])) {
+          list.add(player.getName());
+        }
+        if (arguments[0].length() >= 3) {
+          list.addAll(PlayerNameRecord.getPlayersThatStartWith(database, arguments[0]));
+        }
+      }
+    }
+    return list;
   }
 
 }
