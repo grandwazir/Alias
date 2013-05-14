@@ -4,7 +4,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.avaje.ebean.EbeanServer;
 
@@ -72,18 +74,20 @@ public final class CheckCommand extends AbstractCommand {
   
   public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] arguments) {
     List<String> list = new ArrayList<String>();
+    Set<String> temp = new HashSet<String>();
     if (arguments.length <= 1) {
       for (Player player : Bukkit.getServer().getOnlinePlayers()) {
         if (arguments.length < 1) {
-          list.add(player.getName());
+          temp.add(player.getName());
         } else if (player.getName().startsWith(arguments[0])) {
-          list.add(player.getName());
-        }
-        if (arguments[0].length() >= 3) {
-          list.addAll(PlayerNameRecord.getPlayersThatStartWith(database, arguments[0]));
+          temp.add(player.getName());
         }
       }
+      if (arguments[0].length() >= 3) {
+        temp.addAll(PlayerNameRecord.getPlayersThatStartWith(database, arguments[0]));
+      }
     }
+    list.addAll(temp);
     return list;
   }
 

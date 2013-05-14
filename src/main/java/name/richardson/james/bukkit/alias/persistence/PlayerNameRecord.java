@@ -55,7 +55,7 @@ public class PlayerNameRecord {
   public static List<String> getPlayersThatStartWith(final EbeanServer database, String name) {
     List<String> names = new ArrayList<String>();
     Set<String> temp = new LinkedHashSet<String>();
-    List<PlayerNameRecord> records = database.find(PlayerNameRecord.class).where().istartsWith("player.name", name).findList();
+    List<PlayerNameRecord> records = database.find(PlayerNameRecord.class).where().istartsWith("playerName", name).findList();
     for (PlayerNameRecord record : records) {
       temp.add(record.getPlayerName());
     }
