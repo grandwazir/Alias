@@ -19,9 +19,7 @@ package name.richardson.james.bukkit.alias;
 
 import java.net.InetAddress;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.avaje.ebean.EbeanServer;

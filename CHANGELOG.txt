@@ -1,5 +1,7 @@
 Changelog for Alias (v1.2.1-SNAPSHOT)
 
+2013-05-15 01:14:39 +0100    clean up localisation (James Richardson)
+2013-05-15 01:03:28 +0100    update default pom (James Richardson)
 2013-05-15 00:35:07 +0100    fixed loop bug in name lookup logic (James Richardson)
 2013-05-15 00:18:37 +0100    changed bukkit utilities version again (James Richardson)
 2013-05-15 00:08:04 +0100    added tab completion to database (James Richardson)
