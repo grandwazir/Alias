@@ -21,23 +21,23 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 
-import name.richardson.james.bukkit.utilities.listener.LoggableListener;
+import name.richardson.james.bukkit.utilities.listener.AbstractListener;
 
-public class PlayerListener extends LoggableListener {
+public class PlayerListener extends AbstractListener {
 
-  /** The handler for this listener */
-  private final AliasHandler handler;
+	/** The handler for this listener */
+	private final AliasHandler handler;
 
-  public PlayerListener(final Alias alias) {
-    super(alias);
-    this.handler = alias.getHandler();
-  }
+	public PlayerListener(final Alias alias) {
+		super(alias);
+		this.handler = alias.getHandler();
+	}
 
-  @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-  public void onPlayerLogin(final AsyncPlayerPreLoginEvent event) {
-    final String playerName = event.getName();
-    final String address = event.getAddress().toString();
-    this.handler.associatePlayer(playerName, address);
-  }
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+	public void onPlayerLogin(final AsyncPlayerPreLoginEvent event) {
+		final String playerName = event.getName();
+		final String address = event.getAddress().toString();
+		this.handler.associatePlayer(playerName, address);
+	}
 
 }

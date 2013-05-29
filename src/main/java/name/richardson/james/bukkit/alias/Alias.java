@@ -17,112 +17,87 @@
  ******************************************************************************/
 package name.richardson.james.bukkit.alias;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-
-import com.avaje.ebean.EbeanServer;
 
 import name.richardson.james.bukkit.alias.persistence.InetAddressRecord;
 import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
 import name.richardson.james.bukkit.alias.query.CheckCommand;
 import name.richardson.james.bukkit.alias.query.DeleteCommand;
 import name.richardson.james.bukkit.utilities.command.CommandManager;
-import name.richardson.james.bukkit.utilities.configuration.DatabaseConfiguration;
-import name.richardson.james.bukkit.utilities.persistence.SQLStorage;
 import name.richardson.james.bukkit.utilities.plugin.AbstractPlugin;
+import name.richardson.james.bukkit.utilities.plugin.PluginPermissions;
 
+@PluginPermissions(permissions = { "alias" })
 public class Alias extends AbstractPlugin {
 
-  /** The handler for this plugin */
-  private AliasHandler handler;
+	/** The handler for this plugin */
+	private AliasHandler handler;
 
-  /** The backend SQLStorage. */
-  private SQLStorage storage;
+	/**
+	 * Gets the artifact id.
+	 * 
+	 * @return the artifact id
+	 */
+	public String getArtifactID() {
+		return "alias";
+	}
 
-  /**
-   * Gets the artifact id.
-   * 
-   * @return the artifact id
-   */
-  public String getArtifactID() {
-    return "alias";
-  }
+	/**
+	 * Gets the database classes.
+	 * 
+	 * @return the database classes
+	 */
+	@Override
+	public List<Class<?>> getDatabaseClasses() {
+		final List<Class<?>> list = new LinkedList<Class<?>>();
+		list.add(InetAddressRecord.class);
+		list.add(PlayerNameRecord.class);
+		return list;
+	}
 
-  @Override
-  public EbeanServer getDatabase() {
-    return this.storage.getEbeanServer();
-  }
+	/**
+	 * Gets the group id.
+	 * 
+	 * @return the group id
+	 */
+	@Override
+	public String getGroupID() {
+		return "name.richardson.james.bukkit";
+	}
 
-  /**
-   * Gets the database classes.
-   * 
-   * @return the database classes
-   */
-  @Override
-  public List<Class<?>> getDatabaseClasses() {
-    final List<Class<?>> list = new LinkedList<Class<?>>();
-    list.add(InetAddressRecord.class);
-    list.add(PlayerNameRecord.class);
-    return list;
-  }
+	public AliasHandler getHandler() {
+		if (this.handler == null) {
+			this.handler = new AliasHandler(this);
+		}
+		return this.handler;
+	}
 
-  /**
-   * Gets the group id.
-   * 
-   * @return the group id
-   */
-  @Override
-  public String getGroupID() {
-    return "name.richardson.james.bukkit";
-  }
+	public String getVersion() {
+		return this.getDescription().getVersion();
+	}
 
-  /**
-   * Gets the handler.
-   * 
-   * @param parentClass the parent class
-   * @return the handler
-   */
-  public AliasHandler getHandler() {
-    if (this.handler == null) {
-      this.handler = new AliasHandler(this);
-    }
-    return this.handler;
-  }
+	@Override
+	public void onEnable() {
+		try {
+			this.loadConfiguration();
+			this.registerCommands();
+			this.registerListeners();
+			this.loadDatabase();
+			this.setupMetrics();
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-  /**
-   * Setup persistence.
-   * 
-   * @throws SQLException the sQL exception
-   */
-  @Override
-  protected void establishPersistence() throws SQLException {
-    try {
-      this.storage = new SQLStorage(this, new DatabaseConfiguration(this), this.getDatabaseClasses());
-      this.storage.initalise();
-    } catch (final IOException e) {
-      e.printStackTrace();
-    }
-  }
+	private void registerCommands() {
+		final CommandManager manager = new CommandManager("as");
+		manager.addCommand(new CheckCommand(this));
+		manager.addCommand(new DeleteCommand(this));
+	}
 
-  /**
-   * Register commands.
-   */
-  @Override
-  protected void registerCommands() {
-    final CommandManager manager = new CommandManager(this);
-    this.getCommand("as").setExecutor(manager);
-    manager.addCommand(new CheckCommand(this));
-    manager.addCommand(new DeleteCommand(this));
-  }
-
-  /**
-   * Register events.
-   */
-  @Override
-  protected void registerListeners() {
-    new PlayerListener(this);
-  }
+	private void registerListeners() {
+		new PlayerListener(this);
+	}
 
 }
