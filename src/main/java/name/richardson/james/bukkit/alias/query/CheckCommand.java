@@ -13,10 +13,13 @@ import name.richardson.james.bukkit.alias.Alias;
 import name.richardson.james.bukkit.alias.AliasHandler;
 import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
 import name.richardson.james.bukkit.utilities.command.AbstractCommand;
+import name.richardson.james.bukkit.utilities.command.CommandMatchers;
 import name.richardson.james.bukkit.utilities.command.CommandPermissions;
 import name.richardson.james.bukkit.utilities.formatters.ChoiceFormatter;
+import name.richardson.james.bukkit.utilities.matchers.OfflinePlayerMatcher;
 
 @CommandPermissions(permissions = { "alias.check" })
+@CommandMatchers(matchers = { OfflinePlayerMatcher.class })
 public final class CheckCommand extends AbstractCommand {
 
 	private final ChoiceFormatter choiceFormatter;

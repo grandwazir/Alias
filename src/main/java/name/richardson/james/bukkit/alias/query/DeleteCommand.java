@@ -7,9 +7,12 @@ import org.bukkit.command.CommandSender;
 import name.richardson.james.bukkit.alias.Alias;
 import name.richardson.james.bukkit.alias.AliasHandler;
 import name.richardson.james.bukkit.utilities.command.AbstractCommand;
+import name.richardson.james.bukkit.utilities.command.CommandMatchers;
 import name.richardson.james.bukkit.utilities.command.CommandPermissions;
+import name.richardson.james.bukkit.utilities.matchers.OfflinePlayerMatcher;
 
 @CommandPermissions(permissions = { "alias.delete" })
+@CommandMatchers(matchers = { OfflinePlayerMatcher.class, OfflinePlayerMatcher.class })
 public final class DeleteCommand extends AbstractCommand {
 
 	private final AliasHandler handler;
