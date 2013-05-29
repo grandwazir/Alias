@@ -21,7 +21,6 @@ import java.net.InetAddress;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.bukkit.entity.Player;
 
@@ -29,20 +28,18 @@ import com.avaje.ebean.EbeanServer;
 
 import name.richardson.james.bukkit.alias.persistence.InetAddressRecord;
 import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
-import name.richardson.james.bukkit.utilities.logging.Logger;
 
 public final class AliasHandler {
 
 	private final EbeanServer database;
-
-	private final Logger logger = new Logger(this);
 
 	public AliasHandler(final Alias plugin) {
 		this.database = plugin.getDatabase();
 	}
 
 	public void associatePlayer(final String playerName, final String address) {
-		this.logger.log(Level.FINE, String.format("Associating %s with address %s", playerName, address));
+		// this.logger.log(Level.FINE,
+		// String.format("Associating %s with address %s", playerName, address));
 		final PlayerNameRecord playerNameRecord = PlayerNameRecord.findByName(this.database, playerName);
 		final InetAddressRecord inetAddressRecord = InetAddressRecord.findByAddress(this.database, address);
 		playerNameRecord.updateLastSeen();
@@ -58,7 +55,8 @@ public final class AliasHandler {
 
 	public void deassociatePlayer(final String playerName, final String alias) {
 		if (!PlayerNameRecord.isPlayerKnown(this.database, playerName) || !PlayerNameRecord.isPlayerKnown(this.database, alias)) { return; }
-		this.logger.log(Level.FINE, String.format("Deassociating %s with alias %s", playerName, alias));
+		// this.logger.log(Level.FINE,
+		// String.format("Deassociating %s with alias %s", playerName, alias));
 		final PlayerNameRecord playerRecord = PlayerNameRecord.findByName(this.database, playerName);
 		final PlayerNameRecord aliasRecord = PlayerNameRecord.findByName(this.database, alias);
 		for (final InetAddressRecord address : playerRecord.getAddresses()) {

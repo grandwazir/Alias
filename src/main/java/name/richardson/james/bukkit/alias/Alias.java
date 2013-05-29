@@ -81,9 +81,9 @@ public class Alias extends AbstractPlugin {
 	public void onEnable() {
 		try {
 			this.loadConfiguration();
+			this.loadDatabase();
 			this.registerCommands();
 			this.registerListeners();
-			this.loadDatabase();
 			this.setupMetrics();
 		} catch (final Exception e) {
 			e.printStackTrace();

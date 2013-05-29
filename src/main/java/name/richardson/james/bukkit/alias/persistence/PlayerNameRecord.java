@@ -40,89 +40,88 @@ import com.avaje.ebean.validation.NotNull;
 @Table(name = "alias_players")
 public class PlayerNameRecord {
 
-  public static PlayerNameRecord findByName(final EbeanServer database, final String playerName) {
-    PlayerNameRecord record = database.find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
-    if (record == null) {
-      record = new PlayerNameRecord();
-      record.updateLastSeen();
-      record.setPlayerName(playerName);
-      database.save(record);
-      record = database.find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
-    }
-    return record;
-  }
-  
-  public static List<String> getPlayersThatStartWith(final EbeanServer database, String name) {
-    List<String> names = new ArrayList<String>();
-    Set<String> temp = new LinkedHashSet<String>();
-    List<PlayerNameRecord> records = database.find(PlayerNameRecord.class).where().istartsWith("playerName", name).findList();
-    for (PlayerNameRecord record : records) {
-      temp.add(record.getPlayerName());
-    }
-    names.addAll(temp);
-    return names;
-  }
+	public static PlayerNameRecord findByName(final EbeanServer database, final String playerName) {
+		PlayerNameRecord record = database.find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
+		if (record == null) {
+			record = new PlayerNameRecord();
+			record.updateLastSeen();
+			record.setPlayerName(playerName);
+			database.save(record);
+			record = database.find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
+		}
+		return record;
+	}
 
-  public static boolean isPlayerKnown(final EbeanServer database, final String playerName) {
-    final PlayerNameRecord record = database.find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
-    if (record != null) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+	public static List<String> getPlayersThatStartWith(final EbeanServer database, final String name) {
+		final List<String> names = new ArrayList<String>();
+		final Set<String> temp = new LinkedHashSet<String>();
+		final List<PlayerNameRecord> records = database.find(PlayerNameRecord.class).where().istartsWith("playerName", name).findList();
+		for (final PlayerNameRecord record : records) {
+			temp.add(record.getPlayerName());
+		}
+		names.addAll(temp);
+		return names;
+	}
 
-  private List<InetAddressRecord> addresses;
+	public static boolean isPlayerKnown(final EbeanServer database, final String playerName) {
+		System.out.append(playerName);
+		final PlayerNameRecord record = database.find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
+		if (record != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-  @Id
-  private int id;
+	private List<InetAddressRecord> addresses;
 
-  @NotNull
-  @Temporal(TemporalType.TIMESTAMP)
-  private Timestamp lastSeen;
+	@Id
+	private int id;
 
-  @NotNull
-  private String playerName;
+	@NotNull
+	@Temporal(TemporalType.TIMESTAMP)
+	private Timestamp lastSeen;
 
-  @ManyToMany(cascade = CascadeType.PERSIST)
-  @JoinTable(name = "alias_players_addresses")
-  public List<InetAddressRecord> getAddresses() {
-    if (this.addresses == null) {
-      return Collections.emptyList();
-    }
-    return this.addresses;
-  }
+	@NotNull
+	private String playerName;
 
-  public int getId() {
-    return this.id;
-  }
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(name = "alias_players_addresses")
+	public List<InetAddressRecord> getAddresses() {
+		if (this.addresses == null) { return Collections.emptyList(); }
+		return this.addresses;
+	}
 
-  public Timestamp getLastSeen() {
-    return this.lastSeen;
-  }
+	public int getId() {
+		return this.id;
+	}
 
-  public String getPlayerName() {
-    return this.playerName;
-  }
+	public Timestamp getLastSeen() {
+		return this.lastSeen;
+	}
 
-  public void setAddresses(final List<InetAddressRecord> addresses) {
-    this.addresses = addresses;
-  }
+	public String getPlayerName() {
+		return this.playerName;
+	}
 
-  public void setId(final int id) {
-    this.id = id;
-  }
+	public void setAddresses(final List<InetAddressRecord> addresses) {
+		this.addresses = addresses;
+	}
 
-  public void setLastSeen(final Timestamp lastSeen) {
-    this.lastSeen = lastSeen;
-  }
+	public void setId(final int id) {
+		this.id = id;
+	}
 
-  public void setPlayerName(final String playerName) {
-    this.playerName = playerName;
-  }
+	public void setLastSeen(final Timestamp lastSeen) {
+		this.lastSeen = lastSeen;
+	}
 
-  public void updateLastSeen() {
-    this.lastSeen = new Timestamp(System.currentTimeMillis());
-  }
+	public void setPlayerName(final String playerName) {
+		this.playerName = playerName;
+	}
+
+	public void updateLastSeen() {
+		this.lastSeen = new Timestamp(System.currentTimeMillis());
+	}
 
 }

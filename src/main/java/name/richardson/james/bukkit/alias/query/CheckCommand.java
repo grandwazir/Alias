@@ -36,7 +36,8 @@ public final class CheckCommand extends AbstractCommand {
 		this.choiceFormatter = new ChoiceFormatter();
 		this.choiceFormatter.setMessage("checkcommand.header");
 		this.choiceFormatter.setLimits(0, 1, 2);
-		this.choiceFormatter.setFormats(this.getMessage("no-names"), this.getMessage("one-name"), this.getMessage("many-names"));
+		this.choiceFormatter.setFormats(this.getMessage("checkcommand.no-names"), this.getMessage("checkcommand.one-name"),
+			this.getMessage("checkcommand.many-names"));
 	}
 
 	public void execute(final List<String> arguments, final CommandSender sender) {
