@@ -26,11 +26,6 @@ public final class DeleteCommand extends AbstractCommand {
 		this.handler = plugin.getHandler();
 	}
 
-	public void execute(final CommandSender sender) {
-		this.handler.deassociatePlayer(this.playerName, this.targetName);
-		sender.sendMessage(this.getMessage("deletecommand.dessociated-player", this.playerName, this.targetName));
-	}
-
 	public void execute(final List<String> arguments, final CommandSender sender) {
 		if (arguments.size() < 2) {
 			sender.sendMessage(this.getMessage("specify-player-names"));
@@ -38,6 +33,8 @@ public final class DeleteCommand extends AbstractCommand {
 			this.playerName = arguments.get(0);
 			this.targetName = arguments.get(0);
 		}
+		this.handler.deassociatePlayer(this.playerName, this.targetName);
+		sender.sendMessage(this.getMessage("deletecommand.dessociated-player", this.playerName, this.targetName));
 	}
 
 }
