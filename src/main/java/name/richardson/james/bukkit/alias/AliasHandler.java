@@ -22,9 +22,9 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.avaje.ebean.EbeanServer;
-
 import org.bukkit.entity.Player;
+
+import com.avaje.ebean.EbeanServer;
 
 import name.richardson.james.bukkit.alias.persistence.InetAddressRecord;
 import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
@@ -32,65 +32,64 @@ import name.richardson.james.bukkit.utilities.logging.Logger;
 
 public final class AliasHandler {
 
-  private final EbeanServer database;
+	private final EbeanServer database;
 
-  private final Logger logger;
+	private final Logger logger;
 
-  public AliasHandler(final Alias plugin) {
-    this.logger = plugin.getCustomLogger();
-    this.database = plugin.getDatabase();
-  }
+	public AliasHandler(final Alias plugin) {
+		this.logger = plugin.getCustomLogger();
+		this.database = plugin.getDatabase();
+	}
 
-  public void associatePlayer(final String playerName, final String address) {
-    this.logger.debug(this, String.format("Associating %s with address %s", playerName, address));
-    final PlayerNameRecord playerNameRecord = PlayerNameRecord.findByName(this.database, playerName);
-    final InetAddressRecord inetAddressRecord = InetAddressRecord.findByAddress(this.database, address);
-    playerNameRecord.updateLastSeen();
-    inetAddressRecord.updateLastSeen();
+	public void associatePlayer(final String playerName, final String address) {
+		this.logger.debug(this, String.format("Associating %s with address %s", playerName, address));
+		final PlayerNameRecord playerNameRecord = PlayerNameRecord.findByName(this.database, playerName);
+		final InetAddressRecord inetAddressRecord = InetAddressRecord.findByAddress(this.database, address);
+		playerNameRecord.updateLastSeen();
+		inetAddressRecord.updateLastSeen();
 
-    // link IP address to name
-    if (!playerNameRecord.getAddresses().contains(inetAddressRecord)) {
-      playerNameRecord.getAddresses().add(inetAddressRecord);
-    }
+		// link IP address to name
+		if (!playerNameRecord.getAddresses().contains(inetAddressRecord)) {
+			playerNameRecord.getAddresses().add(inetAddressRecord);
+		}
 
-    this.database.save(playerNameRecord);
-  }
+		this.database.save(playerNameRecord);
+	}
 
-  public void deassociatePlayer(final String playerName, final String alias) {
-    if (!PlayerNameRecord.isPlayerKnown(this.database, playerName) || !PlayerNameRecord.isPlayerKnown(this.database, alias)) return;
-    this.logger.debug(this, String.format("Deassociating %s with alias %s", playerName, alias));
-    final PlayerNameRecord playerRecord = PlayerNameRecord.findByName(this.database, playerName);
-    final PlayerNameRecord aliasRecord = PlayerNameRecord.findByName(this.database, alias);
-    System.out.print(playerRecord.getAddresses().size());
-    for (final InetAddressRecord address : playerRecord.getAddresses()) {
-      if (address.getPlayerNames().contains(aliasRecord)) {
-        aliasRecord.getAddresses().remove(address);
-      }
-    }
-    database.save(aliasRecord);
-  }
+	public void deassociatePlayer(final String playerName, final String alias) {
+		if (!PlayerNameRecord.isPlayerKnown(this.database, playerName) || !PlayerNameRecord.isPlayerKnown(this.database, alias)) { return; }
+		this.logger.debug(this, String.format("Deassociating %s with alias %s", playerName, alias));
+		final PlayerNameRecord playerRecord = PlayerNameRecord.findByName(this.database, playerName);
+		final PlayerNameRecord aliasRecord = PlayerNameRecord.findByName(this.database, alias);
+		for (final InetAddressRecord address : playerRecord.getAddresses()) {
+			if (address.getPlayerNames().contains(aliasRecord)) {
+				aliasRecord.getAddresses().remove(address);
+			}
+		}
+		this.database.save(aliasRecord);
+	}
 
-  public Collection<InetAddressRecord> getIPAddresses(final Player player) {
-    return this.getIPAddresses(player.getName());
-  }
+	public Collection<InetAddressRecord> getIPAddresses(final Player player) {
+		return this.getIPAddresses(player.getName());
+	}
 
-  public Collection<InetAddressRecord> getIPAddresses(final String playerName) {
-    final PlayerNameRecord record = PlayerNameRecord.findByName(this.database, playerName);
-    return new LinkedHashSet<InetAddressRecord>(record.getAddresses());
-  }
+	public Collection<InetAddressRecord> getIPAddresses(final String playerName) {
+		final PlayerNameRecord record = PlayerNameRecord.findByName(this.database, playerName);
+		return new LinkedHashSet<InetAddressRecord>(record.getAddresses());
+	}
 
-  public Collection<PlayerNameRecord> getPlayersNames(final InetAddress ip) {
-    final InetAddressRecord record = InetAddressRecord.findByAddress(this.database, ip.getHostAddress());
-    return new LinkedHashSet<PlayerNameRecord>(record.getPlayerNames());
-  }
+	public Collection<PlayerNameRecord> getPlayersNames(final InetAddress ip) {
+		final InetAddressRecord record = InetAddressRecord.findByAddress(this.database, ip.getHostAddress());
+		return new LinkedHashSet<PlayerNameRecord>(record.getPlayerNames());
+	}
 
-  public Collection<PlayerNameRecord> getPlayersNames(final String playerName) {
-    final PlayerNameRecord record = PlayerNameRecord.findByName(this.database, playerName);
-    final Set<PlayerNameRecord> records = new LinkedHashSet<PlayerNameRecord>();
-    for (final InetAddressRecord address : record.getAddresses()) {
-      records.addAll(address.getPlayerNames());
-    }
-    return records;
-  }
+	public Collection<PlayerNameRecord> getPlayersNames(final String playerName) {
+		final PlayerNameRecord record = PlayerNameRecord.findByName(this.database, playerName);
+		final Set<PlayerNameRecord> records = new LinkedHashSet<PlayerNameRecord>();
+		for (final InetAddressRecord address : record.getAddresses()) {
+			records.addAll(address.getPlayerNames());
+		}
+		return records;
+	}
 
 }
