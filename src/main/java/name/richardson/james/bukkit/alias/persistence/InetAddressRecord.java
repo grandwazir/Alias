@@ -36,78 +36,76 @@ import com.avaje.ebean.validation.NotNull;
 @Table(name = "alias_addresses")
 public class InetAddressRecord {
 
-  public static InetAddressRecord findByAddress(final EbeanServer database, final String address) {
-    InetAddressRecord record = database.find(InetAddressRecord.class).where().eq("address", address).findUnique();
-    if (record == null) {
-      record = new InetAddressRecord();
-      record.updateLastSeen();
-      record.setAddress(address);
-      database.save(record);
-      record = database.find(InetAddressRecord.class).where().eq("address", address).findUnique();
-    }
-    return record;
-  }
+	public static InetAddressRecord findByAddress(final EbeanServer database, final String address) {
+		InetAddressRecord record = database.find(InetAddressRecord.class).where().eq("address", address).findUnique();
+		if (record == null) {
+			record = new InetAddressRecord();
+			record.updateLastSeen();
+			record.setAddress(address);
+			database.save(record);
+			record = database.find(InetAddressRecord.class).where().eq("address", address).findUnique();
+		}
+		return record;
+	}
 
-  public static boolean isAddressKnown(final EbeanServer database, final String address) {
-    final InetAddressRecord record = database.find(InetAddressRecord.class).where().ieq("address", address).findUnique();
-    if (record != null) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+	public static boolean isAddressKnown(final EbeanServer database, final String address) {
+		final InetAddressRecord record = database.find(InetAddressRecord.class).where().ieq("address", address).findUnique();
+		if (record != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-  @NotNull
-  private String address;
+	@NotNull
+	private String address;
 
-  @Id
-  private int id;
+	@Id
+	private int id;
 
-  @NotNull
-  @Temporal(TemporalType.TIMESTAMP)
-  private Timestamp lastSeen;
+	@NotNull
+	@Temporal(TemporalType.TIMESTAMP)
+	private Timestamp lastSeen;
 
-  @ManyToMany(mappedBy = "addresses")
-  private List<PlayerNameRecord> playerNames;
+	@ManyToMany(mappedBy = "addresses")
+	private List<PlayerNameRecord> playerNames;
 
-  public String getAddress() {
-    return this.address;
-  }
+	public String getAddress() {
+		return this.address;
+	}
 
-  public int getId() {
-    return this.id;
-  }
+	public int getId() {
+		return this.id;
+	}
 
-  public Timestamp getLastSeen() {
-    return this.lastSeen;
-  }
+	public Timestamp getLastSeen() {
+		return this.lastSeen;
+	}
 
-  @ManyToMany(targetEntity = PlayerNameRecord.class, cascade = CascadeType.PERSIST)
-  public List<PlayerNameRecord> getPlayerNames() {
-    if (this.playerNames == null) {
-      return Collections.emptyList();
-    }
-    return this.playerNames;
-  }
+	@ManyToMany(targetEntity = PlayerNameRecord.class, cascade = CascadeType.PERSIST)
+	public List<PlayerNameRecord> getPlayerNames() {
+		if (this.playerNames == null) { return Collections.emptyList(); }
+		return this.playerNames;
+	}
 
-  public void setAddress(final String address) {
-    this.address = address;
-  }
+	public void setAddress(final String address) {
+		this.address = address;
+	}
 
-  public void setId(final int id) {
-    this.id = id;
-  }
+	public void setId(final int id) {
+		this.id = id;
+	}
 
-  public void setLastSeen(final Timestamp lastSeen) {
-    this.lastSeen = lastSeen;
-  }
+	public void setLastSeen(final Timestamp lastSeen) {
+		this.lastSeen = lastSeen;
+	}
 
-  public void setPlayerNames(final List<PlayerNameRecord> playerNames) {
-    this.playerNames = playerNames;
-  }
+	public void setPlayerNames(final List<PlayerNameRecord> playerNames) {
+		this.playerNames = playerNames;
+	}
 
-  public void updateLastSeen() {
-    this.lastSeen = new Timestamp(System.currentTimeMillis());
-  }
+	public void updateLastSeen() {
+		this.setLastSeen(new Timestamp(System.currentTimeMillis()));
+	}
 
 }

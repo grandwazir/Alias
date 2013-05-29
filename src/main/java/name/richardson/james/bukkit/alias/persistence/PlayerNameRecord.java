@@ -64,7 +64,6 @@ public class PlayerNameRecord {
 	}
 
 	public static boolean isPlayerKnown(final EbeanServer database, final String playerName) {
-		System.out.append(playerName);
 		final PlayerNameRecord record = database.find(PlayerNameRecord.class).where().ieq("playerName", playerName).findUnique();
 		if (record != null) {
 			return true;
@@ -121,7 +120,7 @@ public class PlayerNameRecord {
 	}
 
 	public void updateLastSeen() {
-		this.lastSeen = new Timestamp(System.currentTimeMillis());
+		this.setLastSeen(new Timestamp(System.currentTimeMillis()));
 	}
 
 }

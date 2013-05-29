@@ -1,5 +1,6 @@
 Changelog for Alias (v1.3.1-SNAPSHOT)
 
+2013-05-29 22:33:53 +0100    fix issue where database was not being registered with handler (James Richardson)
 2013-05-29 22:20:24 +0100    update default configuration to match new format (James Richardson)
 2013-05-29 22:19:46 +0100    add new localisation bundles (James Richardson)
 2013-05-29 22:15:18 +0100    bring in step with changes in BukkitUtilities (James Richardson)

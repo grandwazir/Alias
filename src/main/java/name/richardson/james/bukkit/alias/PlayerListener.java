@@ -37,8 +37,6 @@ public class PlayerListener extends AbstractListener {
 	public void onPlayerLogin(final AsyncPlayerPreLoginEvent event) {
 		final String playerName = event.getName();
 		final String address = event.getAddress().toString();
-		System.err.append(playerName);
-		System.err.append(address);
 		this.handler.associatePlayer(playerName, address);
 	}
 

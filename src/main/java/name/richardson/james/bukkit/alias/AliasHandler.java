@@ -51,6 +51,7 @@ public final class AliasHandler {
 		}
 
 		this.database.save(playerNameRecord);
+		this.database.save(inetAddressRecord);
 	}
 
 	public void deassociatePlayer(final String playerName, final String alias) {
