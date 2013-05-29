@@ -1,6 +1,5 @@
-debugging: false
+logging: INFO
 send-anonymous-statistics: true
 automatic-updates:
-  enabled: true
   method: notify
   branch: stable
