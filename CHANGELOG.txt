@@ -1,5 +1,8 @@
-Changelog for Alias (v1.3.1-SNAPSHOT)
+Changelog for Alias (v1.3.2-SNAPSHOT)
 
+
+v1.3.1
+2013-05-31 04:25:45 +0100    prepare for release (James Richardson)
 2013-05-29 22:42:16 +0100    delete command now actually works (James Richardson)
 2013-05-29 22:40:03 +0100    add OfflinePlayerMatchers to commands (James Richardson)
 2013-05-29 22:37:59 +0100    now correctly updates the time when a player logins in (James Richardson)
