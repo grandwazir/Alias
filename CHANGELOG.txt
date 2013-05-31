@@ -1,5 +1,7 @@
 Changelog for Alias (v1.3.2-SNAPSHOT)
 
+2013-05-31 19:58:29 +0100    update utilities (James Richardson)
+2013-05-31 19:57:26 +0100    update rather than save (James Richardson)
 
 v1.3.1
 2013-05-31 04:25:45 +0100    prepare for release (James Richardson)
