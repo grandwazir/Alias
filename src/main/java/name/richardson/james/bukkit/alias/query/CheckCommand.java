@@ -37,10 +37,10 @@ public final class CheckCommand extends AbstractCommand {
 		this.handler = plugin.getHandler();
 		this.database = plugin.getDatabase();
 		this.choiceFormatter = new ChoiceFormatter();
-		this.choiceFormatter.setMessage("checkcommand.header");
+		this.choiceFormatter.setMessage("notice.check-header");
 		this.choiceFormatter.setLimits(0, 1, 2);
-		this.choiceFormatter.setFormats(this.getMessage("checkcommand.no-names"), this.getMessage("checkcommand.one-name"),
-			this.getMessage("checkcommand.many-names"));
+		this.choiceFormatter.setFormats(this.getMessage("shared.choice.no-names"), this.getMessage("shared.choice.one-name"),
+			this.getMessage("shared.choice.many-names"));
 	}
 
 	public void execute(final List<String> arguments, final CommandSender sender) {
@@ -55,12 +55,12 @@ public final class CheckCommand extends AbstractCommand {
 			sender.sendMessage(this.choiceFormatter.getMessage());
 			if (!alias.isEmpty()) {
 				for (final PlayerNameRecord record : alias) {
-					final String message = this.getMessage("checkcommand.list-item", record.getPlayerName(), this.dateFormatter.format(record.getLastSeen()));
+					final String message = this.getMessage("notice.check-list-item", record.getPlayerName(), this.dateFormatter.format(record.getLastSeen()));
 					sender.sendMessage(message);
 				}
 			}
 		} else {
-			sender.sendMessage(this.getMessage("checkcommand.no-names-found"));
+			sender.sendMessage(this.getMessage("notice.no-names-found"));
 		}
 	}
 }

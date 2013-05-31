@@ -28,13 +28,13 @@ public final class DeleteCommand extends AbstractCommand {
 
 	public void execute(final List<String> arguments, final CommandSender sender) {
 		if (arguments.size() < 2) {
-			sender.sendMessage(this.getMessage("specify-player-names"));
+			sender.sendMessage(this.getMessage("error.specify-player-names"));
 		} else {
 			this.playerName = arguments.get(0);
-			this.targetName = arguments.get(0);
+			this.targetName = arguments.get(1);
 		}
 		this.handler.deassociatePlayer(this.playerName, this.targetName);
-		sender.sendMessage(this.getMessage("deletecommand.dessociated-player", this.playerName, this.targetName));
+		sender.sendMessage(this.getMessage("notice.dessociated-player", this.playerName, this.targetName));
 	}
 
 }

@@ -1,5 +1,6 @@
 Changelog for Alias (v1.3.1-SNAPSHOT)
 
+2013-05-29 22:42:16 +0100    delete command now actually works (James Richardson)
 2013-05-29 22:40:03 +0100    add OfflinePlayerMatchers to commands (James Richardson)
 2013-05-29 22:37:59 +0100    now correctly updates the time when a player logins in (James Richardson)
 2013-05-29 22:33:53 +0100    fix issue where database was not being registered with handler (James Richardson)
