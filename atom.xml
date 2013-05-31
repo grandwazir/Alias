@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ 
+ <title>Alias</title>
+ <link href="http://grandwazir.github.com/Alias/" rel="self"/>
+ <link href="http://grandwazir.github.com/Alias"/>
+ <updated>2013-05-31T17:42:01+01:00</updated>
+ <id>http://grandwazir.github.com/Alias</id>
+ <author>
+   <name>James Richardson</name>
+   <email>grandwazir@armathia.net</email>
+ </author>
+
+ 
+ 
+</feed>

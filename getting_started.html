@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta name="generator" content="HTML Tidy for HTML5 (experimental) for Linux https://github.com/w3c/tidy-html5/tree/c63cc39">
+  <meta charset="utf-8">
+
+  <title>Getting started</title>
+  <meta name="description" content="">
+  <meta name="author" content="James Richardson"><!-- Enable responsive viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- Import bootstrap .js -->
+
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js">
+</script>
+  <script type="text/javascript" src="http://grandwazir.github.io/Alias/assets/themes/twitter/bootstrap/js/bootstrap.js">
+</script><!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  <!-- Le styles -->
+  <link href="http://grandwazir.github.io/Alias/assets/themes/twitter/bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
+  <link href="http://grandwazir.github.io/Alias/assets/themes/twitter/css/style.css?body=1" rel="stylesheet" type="text/css" media="all"><!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  <!-- atom & rss feed -->
+  <link href="http://grandwazir.github.io/Alias/atom.xml" type="application/atom+xml" rel="alternate" title="Sitewide ATOM Feed">
+  <link href="http://grandwazir.github.io/Alias/rss.xml" type="application/rss+xml" rel="alternate" title="Sitewide RSS Feed">
+</head>
+
+<body data-spy="scroll" data-target="#scrollspy" class="extra-padding">
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container-narrow">
+        <a class="brand" href="http://grandwazir.github.io/Alias">Alias</a>
+
+        <ul class="nav">
+          <li>
+            <a href="http://grandwazir.github.io/Alias/download.html">Download</a>
+          </li>
+
+          <li>
+            <a href="http://grandwazir.github.io/Alias/features.html">Features</a>
+          </li>
+
+          <li class="active">
+            <a href="http://grandwazir.github.io/Alias/getting_started.html" class="active">Getting started</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div><!-- Add a secondary bar if necessary -->
+
+  <div id="scrollspy" class="navbar navbar-inverse navbar-fixed-top navbar-secondary">
+    <div class="navbar-inner">
+      <div class="container-narrow">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></a>
+
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li>
+              <a href="#checking_associations">Checking associations</a>
+            </li>
+
+            <li>
+              <a href="#database">Database</a>
+            </li>
+
+            <li>
+              <a href="#permissions">Permissions</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-narrow scroll-adjust">
+    <div class="content">
+      <div class="page-header">
+        <h1>Getting started</h1>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <p class='lead'>Getting started with Alias couldn't be easier. Just download and drag it into your plugins folder and away you go. Still stuck? Read on.</p>
+
+          <h2 id='checking_associations'>Checking associations</h2>
+
+          <p>Alias matches player names to IP addresses automatically when people join your server. You can check for these associations using the plugin commands. To check if two players are related type <code>/as check &lt;name&gt;</code> to see a report of all the names they have used. For example <code>/as check grandwazir</code> would check all the names that I had used to login.</p>
+
+          <p>If you want to remove an assoication for any reason you can type <code>/as delete &lt;name&gt; alias</code>. For example <code>/as delete grandwazir sergeant_subtle</code> would delete any link between those two players.</p>
+
+          <h2 id='database'>Database</h2>
+
+          <p>Alias uses the Bukkit persistance system. This means that you need to configure your bukkit.yml in your server directory with your database settings. Below are example bukkit.yml for MySQL and SQlite3.</p>
+
+          <h3 id='mysql'>MySQL</h3>
+
+          <p>This is an example configuration if you wanted to use MySQL. This assumes that it is hosted locally and you want your minecraft database to be minecraft_game. You will need to customise this for your own username and password.</p>
+          <pre>
+<code>database:
+    username: bukkit
+    isolation: SERIALIZABLE
+    driver: com.mysql.jdbc.Driver
+    password: walrus
+    url: jdbc:mysql://localhost:3306/minecraft_game</code>
+</pre>
+
+          <p>If you get errors when setting this up make sure that you have given your user enough permissions to administrate the database and the database itself does actually exist.</p>
+
+          <h3 id='sqlite3'>SQlite3</h3>
+
+          <p>This is the default setting when you setup bukkit for the first time. It creates a sqlite database for each plugin that needs in the plugins data folder. For BanHammer this would be at plugins/BanHammer/BanHammer.db. You can change those folders by changing the settings below.</p>
+          <pre>
+<code>database:
+    username: bukkit
+    isolation: SERIALIZABLE
+    driver: org.sqlite.JDBC
+    password: walrus
+    url: jdbc:sqlite:{DIR}{NAME}.db</code>
+</pre>
+
+          <h2 id='permissions'>Permissions</h2>
+
+          <p>Each command is assigned its own permission node and all follow the same style. The full list of available permissions, and their defaults, is below. Additionally there is the <code>hearthstone.teleport.cooldown</code> node. Players who have this permission will not be able to teleport home unless the cooldown time has expired.</p>
+
+          <dl>
+            <dt>alias</dt>
+
+            <dd>Allows access to everything in the plugin (defaults op).</dd>
+
+            <dt>alias.check</dt>
+
+            <dd>Allow a player to check the names another player has used (defaults op).</dd>
+
+            <dt>alias.delete</dt>
+
+            <dd>Allow a player to delete associations between players (defaults op).</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <hr>
+
+    <footer>
+      <p class="text-center"><small>© 2013 James Richardson with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a> and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a></small></p>
+    </footer>
+  </div>
+</body>
+</html>
