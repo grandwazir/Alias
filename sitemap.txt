@@ -4,6 +4,7 @@ http://grandwazir.github.com/Alias/index.html
 http://grandwazir.github.com/Alias/versions/1.3.1.html
 http://grandwazir.github.com/Alias/versions/1.3.0.html
 http://grandwazir.github.com/Alias/versions/1.3.2.html
+http://grandwazir.github.com/Alias/versions/1.3.3.html
 http://grandwazir.github.com/Alias/rss.xml
 http://grandwazir.github.com/Alias/getting_started.html
 http://grandwazir.github.com/Alias/download.html
