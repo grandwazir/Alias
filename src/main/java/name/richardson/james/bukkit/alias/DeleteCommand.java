@@ -1,40 +1,59 @@
 package name.richardson.james.bukkit.alias;
 
-import java.util.List;
-
-import org.bukkit.command.CommandSender;
-
-import name.richardson.james.bukkit.alias.Alias;
-import name.richardson.james.bukkit.alias.AliasHandler;
 import name.richardson.james.bukkit.utilities.command.AbstractCommand;
-import name.richardson.james.bukkit.utilities.command.CommandMatchers;
-import name.richardson.james.bukkit.utilities.command.CommandPermissions;
-import name.richardson.james.bukkit.utilities.matchers.OfflinePlayerMatcher;
+import name.richardson.james.bukkit.utilities.command.context.CommandContext;
+import name.richardson.james.bukkit.utilities.permissions.PermissionManager;
+import name.richardson.james.bukkit.utilities.permissions.Permissions;
 
-@CommandPermissions(permissions = { "alias.delete" })
-@CommandMatchers(matchers = { OfflinePlayerMatcher.class, OfflinePlayerMatcher.class })
+import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
+import name.richardson.james.bukkit.alias.persistence.PlayerNameRecordManager;
+
+@Permissions(permissions = {DeleteCommand.PERMISSION_ALL})
 public final class DeleteCommand extends AbstractCommand {
 
-	private final AliasHandler handler;
+	public static final String PERMISSION_ALL = "alias.delete";
+
+	private final PlayerNameRecordManager playerNameRecordManager;
 
 	private String playerName;
-
 	private String targetName;
+	private PlayerNameRecord playerRecord;
+	private PlayerNameRecord targetRecord;
 
-	public DeleteCommand(final Alias plugin) {
-		super();
-		this.handler = plugin.getHandler();
+	public DeleteCommand(PermissionManager permissionManager, PlayerNameRecordManager playerNameRecordManager) {
+		super(permissionManager);
+		this.playerNameRecordManager = playerNameRecordManager;
 	}
 
-	public void execute(final List<String> arguments, final CommandSender sender) {
-		if (arguments.size() < 2) {
-			sender.sendMessage(this.getMessage("error.specify-player-names"));
-		} else {
-			this.playerName = arguments.get(0);
-			this.targetName = arguments.get(1);
+	@Override
+	public void execute(CommandContext context) {
+		if (isAuthorised(context.getCommandSender())) {
+			if (!setPlayerNames(context)) return;
+			if (!setPlayerRecords(context)) return;
+			targetRecord.removeAssociation(playerRecord);
 		}
-		this.handler.deassociatePlayer(this.playerName, this.targetName);
-		sender.sendMessage(this.getMessage("notice.dessociated-player", this.playerName, this.targetName));
+	}
+
+
+	private boolean setPlayerNames(CommandContext context) {
+		playerName = null;
+		if (context.has(0) && context.has(1)) {
+			playerName = context.getString(0);
+			targetName = context.getString(1);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean setPlayerRecords(CommandContext context) {
+		playerRecord = playerNameRecordManager.find(playerName);
+		targetRecord = playerNameRecordManager.find(targetName);
+		if (playerRecord == null || targetRecord == null) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 }

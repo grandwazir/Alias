@@ -19,10 +19,7 @@ package name.richardson.james.bukkit.alias.persistence;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import com.avaje.ebean.validation.NotNull;
 
@@ -88,5 +85,30 @@ public class PlayerNameRecord {
 		}
 		return aliases;
 	}
+
+	public List<PlayerNameRecord> getPlayerNameRecords() {
+		final List<PlayerNameRecord> aliases = new ArrayList<PlayerNameRecord>();
+		for (InetAddressRecord inetAddressRecord : getAddresses()) {
+			for (PlayerNameRecord playerNameRecord : inetAddressRecord.getPlayerNames()) {
+				aliases.add(playerNameRecord);
+			}
+		}
+		return aliases;
+	}
+
+	public void createAssociation(PlayerNameRecord playerNameRecord) {
+		for (InetAddressRecord inetAddressRecord : playerNameRecord.getAddresses()) {
+			this.addresses.add(inetAddressRecord);
+		}
+	}
+
+	public void removeAssociation(PlayerNameRecord playerNameRecord) {
+		for (InetAddressRecord inetAddressRecord : playerNameRecord.getAddresses()) {
+			if (inetAddressRecord.getPlayerNames().contains(this)) {
+				this.addresses.remove(inetAddressRecord);
+			}
+		}
+	}
+
 
 }

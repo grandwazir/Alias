@@ -22,7 +22,7 @@ public class PlayerNameRecordManager {
 	public PlayerNameRecord create(String playerName) {
 		PlayerNameRecord record = find(playerName);
 		if (record == null) {
-			LOGGER.log(Level.FINEST, "Creating new PlayerNameRecord for {0}.", playerName);
+			LOGGER.log(Level.FINER, "Creating new PlayerNameRecord for {0}.", playerName);
 			record = new PlayerNameRecord();
 			record.setPlayerName(playerName);
 			database.save(record);
@@ -32,19 +32,29 @@ public class PlayerNameRecordManager {
 	}
 
 	public boolean exists(String playerName) {
-		LOGGER.log(Level.FINEST, "Checking if PlayerNameRecord matching {0} exists.", playerName);
+		LOGGER.log(Level.FINER, "Checking if PlayerNameRecord matching {0} exists.", playerName);
 		return find(playerName) != null;
 	}
 
 	public PlayerNameRecord find(String playerName) {
-		LOGGER.log(Level.FINEST, "Attempting to find PlayerNameRecord matching {0}.", playerName);
+		LOGGER.log(Level.FINER, "Attempting to find PlayerNameRecord matching {0}.", playerName);
 		PlayerNameRecord record = database.find(PlayerNameRecord.class).where().ieq("name", playerName).findUnique();
 		return record;
 	}
 
 	public List<PlayerNameRecord> list() {
-		LOGGER.log(Level.FINEST, "Listing all PlayerNameRecords.");
+		LOGGER.log(Level.FINER, "Listing all PlayerNameRecords.");
 		return database.find(PlayerNameRecord.class).findList();
+	}
+
+	public List<PlayerNameRecord> list(String playerName) {
+		LOGGER.log(Level.FINER, "Listing all PlayerNameRecords starting with {0}.", playerName);
+		return database.find(PlayerNameRecord.class).where().istartsWith("name", playerName).findList();
+	}
+
+	public void save(PlayerNameRecord playerNameRecord) {
+		LOGGER.log(Level.FINER, "Saving {0}", playerNameRecord.toString());
+		database.save(playerNameRecord);
 	}
 
 	@Override
