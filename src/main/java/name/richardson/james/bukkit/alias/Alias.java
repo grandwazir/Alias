@@ -52,7 +52,8 @@ public class Alias extends AbstractDatabasePlugin {
 	private InetAddressRecordManager inetAddressRecordManager;
 	private PlayerNameRecordManager playerNameRecordManager;
 
-	public String getArtifactID() {
+	@Override
+	public String getArtifactId() {
 		return "alias";
 	}
 

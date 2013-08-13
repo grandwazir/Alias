@@ -63,7 +63,7 @@ public class AliasTest {
 	@Test
 	public void testGetArtifactID()
 	throws Exception {
-		Assert.assertEquals("alias", plugin.getArtifactID());
+		Assert.assertEquals("alias", plugin.getArtifactId());
 	}
 
 	@Before
