@@ -47,6 +47,7 @@ import name.richardson.james.bukkit.alias.utilities.command.matcher.PlayerNameRe
 public class Alias extends AbstractDatabasePlugin {
 
 	public static final String PLUGIN_PERMISSION = "alias";
+
 	private PluginConfiguration configuration;
 	private InetAddressRecordManager inetAddressRecordManager;
 	private PlayerNameRecordManager playerNameRecordManager;

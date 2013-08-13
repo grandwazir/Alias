@@ -32,6 +32,9 @@ public final class CheckCommand extends AbstractCommand {
 		super(permissionManager);
 		this.playerNameRecordManager = playerNameRecordManager;
 		this.choiceFormatter = new LocalisedChoiceFormatter();
+		this.choiceFormatter.setMessage("checked-aliases-header");
+		this.choiceFormatter.setFormats("one-alias", "many-aliases");
+		this.choiceFormatter.setLimits(1,2);
 	}
 
 	@Override
@@ -43,6 +46,8 @@ public final class CheckCommand extends AbstractCommand {
 			choiceFormatter.setArguments(aliases.size(), this.playerName);
 			context.getCommandSender().sendMessage(choiceFormatter.getColouredMessage(ColourScheme.Style.HEADER));
 			context.getCommandSender().sendMessage(getAliasesAsMessages());
+		} else {
+			context.getCommandSender().sendMessage(getColouredMessage(ColourScheme.Style.ERROR, "no-permission"));
 		}
 	}
 
@@ -66,6 +71,7 @@ public final class CheckCommand extends AbstractCommand {
 	private boolean setPlayerRecord(CommandContext context) {
 		playerRecord = playerNameRecordManager.find(playerName);
 		if (playerRecord == null) {
+			context.getCommandSender().sendMessage(getColouredMessage(ColourScheme.Style.INFO, "player-not-known-to-alias", playerName));
 			return false;
 		} else {
 			return true;

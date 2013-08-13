@@ -56,7 +56,7 @@ public class PlayerListener extends AbstractListener {
 	public void onPlayerLogin(final AsyncPlayerPreLoginEvent event) {
 		LOGGER.log(Level.FINE, "Received {0}", event.getClass().getSimpleName());
 		PlayerNameRecord playerNameRecord = playerNameRecordManager.create(event.getName());
-		InetAddressRecord inetAddressRecord = inetAddressRecordManager.create(event.getAddress().toString());
+		InetAddressRecord inetAddressRecord = inetAddressRecordManager.create(event.getAddress().getHostAddress());
 		final Timestamp now = new Timestamp(System.currentTimeMillis());
 		playerNameRecord.getAddresses().add(inetAddressRecord);
 		playerNameRecord.setLastSeen(now);

@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.Query;
 import org.apache.commons.lang.Validate;
 
 import name.richardson.james.bukkit.utilities.logging.PrefixedLogger;
@@ -12,6 +13,7 @@ import name.richardson.james.bukkit.utilities.logging.PrefixedLogger;
 public class PlayerNameRecordManager {
 
 	private static final Logger LOGGER = PrefixedLogger.getLogger(PlayerNameRecordManager.class);
+
 	private final EbeanServer database;
 
 	public PlayerNameRecordManager(EbeanServer database) {
@@ -25,7 +27,7 @@ public class PlayerNameRecordManager {
 			LOGGER.log(Level.FINER, "Creating new PlayerNameRecord for {0}.", playerName);
 			record = new PlayerNameRecord();
 			record.setPlayerName(playerName);
-			database.save(record);
+			save(record);
 			record = find(playerName);
 		}
 		return record;
@@ -38,18 +40,20 @@ public class PlayerNameRecordManager {
 
 	public PlayerNameRecord find(String playerName) {
 		LOGGER.log(Level.FINER, "Attempting to find PlayerNameRecord matching {0}.", playerName);
-		PlayerNameRecord record = database.find(PlayerNameRecord.class).where().ieq("name", playerName).findUnique();
-		return record;
+		Query<PlayerNameRecord> query = database.createQuery(PlayerNameRecord.class);
+		query.setParameter("name", playerName);
+		return query.findUnique();
 	}
 
 	public List<PlayerNameRecord> list() {
-		LOGGER.log(Level.FINER, "Listing all PlayerNameRecords.");
-		return database.find(PlayerNameRecord.class).findList();
+		return list("");
 	}
 
 	public List<PlayerNameRecord> list(String playerName) {
-		LOGGER.log(Level.FINER, "Listing all PlayerNameRecords starting with {0}.", playerName);
-		return database.find(PlayerNameRecord.class).where().istartsWith("name", playerName).findList();
+		LOGGER.log(Level.FINER, "Listing all PlayerNameRecords starting with '{0}'.", playerName);
+		Query<PlayerNameRecord> query = database.createQuery(PlayerNameRecord.class);
+		query.where().istartsWith("name", playerName);
+		return query.findList();
 	}
 
 	public void save(PlayerNameRecord playerNameRecord) {

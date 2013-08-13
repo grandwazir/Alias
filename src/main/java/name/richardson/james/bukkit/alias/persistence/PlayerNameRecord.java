@@ -45,9 +45,10 @@ public class PlayerNameRecord {
 	@JoinTable(name = "alias_players_addresses")
 	public List<InetAddressRecord> getAddresses() {
 		if (this.addresses == null) {
-			return Collections.emptyList();
+			return new ArrayList<InetAddressRecord>();
+		} else {
+			return this.addresses;
 		}
-		return this.addresses;
 	}
 
 	public void setAddresses(final List<InetAddressRecord> addresses) {
@@ -99,15 +100,17 @@ public class PlayerNameRecord {
 	}
 
 	public void createAssociation(PlayerNameRecord playerNameRecord) {
+		List<InetAddressRecord> addressRecords = getAddresses();
 		for (InetAddressRecord inetAddressRecord : playerNameRecord.getAddresses()) {
-			this.addresses.add(inetAddressRecord);
+			addressRecords.add(inetAddressRecord);
 		}
+		setAddresses(addressRecords);
 	}
 
 	public void removeAssociation(PlayerNameRecord playerNameRecord) {
 		for (InetAddressRecord inetAddressRecord : playerNameRecord.getAddresses()) {
 			if (inetAddressRecord.getPlayerNames().contains(this)) {
-				this.addresses.remove(inetAddressRecord);
+				getAddresses().remove(inetAddressRecord);
 			}
 		}
 	}

@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.Query;
 import org.apache.commons.lang.Validate;
 
 import name.richardson.james.bukkit.utilities.logging.PrefixedLogger;
@@ -26,16 +27,17 @@ public class InetAddressRecordManager {
 			LOGGER.log(Level.FINER, "Creating new InetAddressRecord for {0}.", address);
 			record = new InetAddressRecord();
 			record.setAddress(address);
-			database.save(record);
-			record = database.find(InetAddressRecord.class).where().eq("address", address).findUnique();
+			save(record);
+			record = find(address);
 		}
 		return record;
 	}
 
 	public InetAddressRecord find(String address) {
 		LOGGER.log(Level.FINER, "Attempting to find InetAddressRecord matching {0}.", address);
-		InetAddressRecord record = database.find(InetAddressRecord.class).where().ieq("address", address).findUnique();
-		return record;
+		Query<InetAddressRecord> query = database.createQuery(InetAddressRecord.class);
+		query.setParameter("address", address);
+		return query.findUnique();
 	}
 
 	public boolean exists(String address) {
@@ -45,7 +47,8 @@ public class InetAddressRecordManager {
 
 	public List<InetAddressRecord> list() {
 		LOGGER.log(Level.FINER, "Listing all InetAddressRecords.");
-		return database.find(InetAddressRecord.class).findList();
+		Query<InetAddressRecord> query = database.createQuery(InetAddressRecord.class);
+		return query.findList();
 	}
 
 	public void save(InetAddressRecord inetAddressRecord) {
