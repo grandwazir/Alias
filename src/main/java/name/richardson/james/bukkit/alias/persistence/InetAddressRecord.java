@@ -17,45 +17,16 @@
  ******************************************************************************/
 package name.richardson.james.bukkit.alias.persistence;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.validation.NotNull;
 
 @Entity
 @Table(name = "alias_addresses")
 public class InetAddressRecord {
-
-	public static InetAddressRecord findByAddress(final EbeanServer database, final String address) {
-		InetAddressRecord record = database.find(InetAddressRecord.class).where().eq("address", address).findUnique();
-		if (record == null) {
-			record = new InetAddressRecord();
-			record.updateLastSeen();
-			record.setAddress(address);
-			database.save(record);
-			record = database.find(InetAddressRecord.class).where().eq("address", address).findUnique();
-		}
-		return record;
-	}
-
-	public static boolean isAddressKnown(final EbeanServer database, final String address) {
-		final InetAddressRecord record = database.find(InetAddressRecord.class).where().ieq("address", address).findUnique();
-		if (record != null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 
 	@NotNull
 	private String address;
@@ -74,38 +45,34 @@ public class InetAddressRecord {
 		return this.address;
 	}
 
-	public int getId() {
-		return this.id;
-	}
-
-	public Timestamp getLastSeen() {
-		return this.lastSeen;
-	}
-
-	@ManyToMany(targetEntity = PlayerNameRecord.class, cascade = CascadeType.PERSIST)
-	public List<PlayerNameRecord> getPlayerNames() {
-		if (this.playerNames == null) { return Collections.emptyList(); }
-		return this.playerNames;
-	}
-
 	public void setAddress(final String address) {
 		this.address = address;
+	}
+
+	public int getId() {
+		return this.id;
 	}
 
 	public void setId(final int id) {
 		this.id = id;
 	}
 
+	public Timestamp getLastSeen() {
+		return this.lastSeen;
+	}
+
 	public void setLastSeen(final Timestamp lastSeen) {
 		this.lastSeen = lastSeen;
 	}
 
-	public void setPlayerNames(final List<PlayerNameRecord> playerNames) {
-		this.playerNames = playerNames;
+	@ManyToMany(targetEntity = PlayerNameRecord.class, cascade = CascadeType.PERSIST)
+	public List<PlayerNameRecord> getPlayerNames() {
+		if (this.playerNames == null) return Collections.emptyList();
+		return this.playerNames;
 	}
 
-	public void updateLastSeen() {
-		this.setLastSeen(new Timestamp(System.currentTimeMillis()));
+	public void setPlayerNames(final List<PlayerNameRecord> playerNames) {
+		this.playerNames = playerNames;
 	}
 
 }
