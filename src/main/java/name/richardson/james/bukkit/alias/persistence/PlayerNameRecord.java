@@ -21,6 +21,8 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.avaje.ebean.validation.NotNull;
 
@@ -75,6 +77,16 @@ public class PlayerNameRecord {
 
 	public void setPlayerName(final String playerName) {
 		this.playerName = playerName;
+	}
+
+	public Set<String> getAliases() {
+		final Set<String> aliases = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+		for (InetAddressRecord inetAddressRecord : getAddresses()) {
+			for (PlayerNameRecord playerNameRecord : inetAddressRecord.getPlayerNames()) {
+				aliases.add(playerNameRecord.getPlayerName());
+			}
+		}
+		return aliases;
 	}
 
 }

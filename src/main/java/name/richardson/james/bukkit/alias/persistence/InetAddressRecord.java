@@ -19,8 +19,7 @@ package name.richardson.james.bukkit.alias.persistence;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import com.avaje.ebean.validation.NotNull;
 
@@ -73,6 +72,16 @@ public class InetAddressRecord {
 
 	public void setPlayerNames(final List<PlayerNameRecord> playerNames) {
 		this.playerNames = playerNames;
+	}
+
+	public Set<String> getAliases() {
+		final Set<String> aliases = new HashSet<String>();
+		for (PlayerNameRecord playerNameRecord : getPlayerNames()) {
+			for (InetAddressRecord inetAddressRecord : playerNameRecord.getAddresses()) {
+				aliases.add(inetAddressRecord.getAddress());
+			}
+		}
+		return aliases;
 	}
 
 }
