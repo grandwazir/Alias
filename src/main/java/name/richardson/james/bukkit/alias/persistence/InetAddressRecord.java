@@ -21,10 +21,12 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.*;
 
+import com.avaje.ebean.annotation.CacheStrategy;
 import com.avaje.ebean.validation.NotNull;
 
 @Entity
 @Table(name = "alias_addresses")
+@CacheStrategy(readOnly = false, useBeanCache = true, warmingQuery ="order by id")
 public class InetAddressRecord {
 
 	@NotNull
