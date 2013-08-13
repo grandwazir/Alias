@@ -1,4 +1,4 @@
-package name.richardson.james.bukkit.alias.query;
+package name.richardson.james.bukkit.alias;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

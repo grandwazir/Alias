@@ -22,8 +22,7 @@ import java.util.List;
 
 import name.richardson.james.bukkit.alias.persistence.InetAddressRecord;
 import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
-import name.richardson.james.bukkit.alias.query.CheckCommand;
-import name.richardson.james.bukkit.alias.query.DeleteCommand;
+
 import name.richardson.james.bukkit.utilities.command.CommandManager;
 import name.richardson.james.bukkit.utilities.plugin.AbstractPlugin;
 import name.richardson.james.bukkit.utilities.plugin.PluginPermissions;
