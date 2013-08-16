@@ -26,12 +26,11 @@ import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.Query;
 import org.apache.commons.lang.Validate;
 
-import name.richardson.james.bukkit.utilities.logging.PrefixedLogger;
+import name.richardson.james.bukkit.utilities.logging.PluginLoggerFactory;
 
 public class InetAddressRecordManager {
 
-	private static final Logger LOGGER = PrefixedLogger.getLogger(InetAddressRecordManager.class);
-
+	private final Logger logger = PluginLoggerFactory.getLogger(InetAddressRecordManager.class);
 	private final EbeanServer database;
 
 	public InetAddressRecordManager(EbeanServer database) {
@@ -42,7 +41,7 @@ public class InetAddressRecordManager {
 	public InetAddressRecord create(String address) {
 		InetAddressRecord record = find(address);
 		if (record == null) {
-			LOGGER.log(Level.FINER, "Creating new InetAddressRecord for {0}.", address);
+			logger.log(Level.FINER, "Creating new InetAddressRecord for {0}.", address);
 			record = new InetAddressRecord();
 			record.setAddress(address);
 			save(record);
@@ -52,25 +51,25 @@ public class InetAddressRecordManager {
 	}
 
 	public InetAddressRecord find(String address) {
-		LOGGER.log(Level.FINER, "Attempting to find InetAddressRecord matching {0}.", address);
+		logger.log(Level.FINER, "Attempting to find InetAddressRecord matching {0}.", address);
 		Query<InetAddressRecord> query = database.createQuery(InetAddressRecord.class);
 		query.setParameter("address", address);
 		return query.findUnique();
 	}
 
 	public boolean exists(String address) {
-		LOGGER.log(Level.FINER, "Checking if InetAddressRecord matching {0} exists.", address);
+		logger.log(Level.FINER, "Checking if InetAddressRecord matching {0} exists.", address);
 		return find(address) != null;
 	}
 
 	public List<InetAddressRecord> list() {
-		LOGGER.log(Level.FINER, "Listing all InetAddressRecords.");
+		logger.log(Level.FINER, "Listing all InetAddressRecords.");
 		Query<InetAddressRecord> query = database.createQuery(InetAddressRecord.class);
 		return query.findList();
 	}
 
 	public void save(InetAddressRecord inetAddressRecord) {
-		LOGGER.log(Level.FINER, "Saving {0}", inetAddressRecord.toString());
+		logger.log(Level.FINER, "Saving {0}", inetAddressRecord.toString());
 		database.save(inetAddressRecord);
 	}
 
