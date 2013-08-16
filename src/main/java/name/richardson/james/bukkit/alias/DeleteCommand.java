@@ -1,28 +1,31 @@
 package name.richardson.james.bukkit.alias;
 
+import org.bukkit.permissions.Permissible;
+
 import name.richardson.james.bukkit.utilities.command.AbstractCommand;
 import name.richardson.james.bukkit.utilities.command.context.CommandContext;
-import name.richardson.james.bukkit.utilities.formatters.colours.ColourScheme;
-import name.richardson.james.bukkit.utilities.permissions.PermissionManager;
-import name.richardson.james.bukkit.utilities.permissions.Permissions;
+import name.richardson.james.bukkit.utilities.formatters.ColourFormatter;
+import name.richardson.james.bukkit.utilities.formatters.DefaultColourFormatter;
+import name.richardson.james.bukkit.utilities.localisation.Localisation;
+import name.richardson.james.bukkit.utilities.localisation.ResourceBundleByClassLocalisation;
 
 import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
 import name.richardson.james.bukkit.alias.persistence.PlayerNameRecordManager;
 
-@Permissions(permissions = {DeleteCommand.PERMISSION_ALL})
 public final class DeleteCommand extends AbstractCommand {
 
 	public static final String PERMISSION_ALL = "alias.delete";
 
 	private final PlayerNameRecordManager playerNameRecordManager;
+	private final ColourFormatter colourFormatter = new DefaultColourFormatter();
+	private final Localisation localisation = new ResourceBundleByClassLocalisation(DeleteCommand.class);
 
 	private String playerName;
 	private String targetName;
 	private PlayerNameRecord playerRecord;
 	private PlayerNameRecord targetRecord;
 
-	public DeleteCommand(PermissionManager permissionManager, PlayerNameRecordManager playerNameRecordManager) {
-		super(permissionManager);
+	public DeleteCommand(PlayerNameRecordManager playerNameRecordManager) {
 		this.playerNameRecordManager = playerNameRecordManager;
 	}
 
@@ -32,12 +35,20 @@ public final class DeleteCommand extends AbstractCommand {
 			if (!setPlayerNames(context)) return;
 			if (!setPlayerRecords(context)) return;
 			targetRecord.removeAssociation(playerRecord);
-			context.getCommandSender().sendMessage(getColouredMessage(ColourScheme.Style.INFO, "disassociated-player", playerName, targetName));
+			context.getCommandSender().sendMessage(colourFormatter.format(localisation.getMessage("disassociated-player"), ColourFormatter.FormatStyle.INFO, playerName, targetName));
 		} else {
-			context.getCommandSender().sendMessage(getColouredMessage(ColourScheme.Style.ERROR, "no-permission"));
+			context.getCommandSender().sendMessage(colourFormatter.format(localisation.getMessage("no-permission"), ColourFormatter.FormatStyle.ERROR));
 		}
 	}
 
+	@Override
+	public boolean isAuthorised(Permissible permissible) {
+		if (permissible.hasPermission(PERMISSION_ALL)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	private boolean setPlayerNames(CommandContext context) {
 		playerName = null;
@@ -46,7 +57,7 @@ public final class DeleteCommand extends AbstractCommand {
 			targetName = context.getString(1);
 			return true;
 		} else {
-			context.getCommandSender().sendMessage(getColouredMessage(ColourScheme.Style.ERROR, "must-specify-player-names"));
+			context.getCommandSender().sendMessage(colourFormatter.format(localisation.getMessage("must-specify-player-names"), ColourFormatter.FormatStyle.ERROR, playerName));
 			return false;
 		}
 	}
@@ -55,7 +66,7 @@ public final class DeleteCommand extends AbstractCommand {
 		playerRecord = playerNameRecordManager.find(playerName);
 		targetRecord = playerNameRecordManager.find(targetName);
 		if (playerRecord == null || targetRecord == null) {
-			context.getCommandSender().sendMessage(getColouredMessage(ColourScheme.Style.WARNING, "players-not-known-to-alias"));
+			context.getCommandSender().sendMessage(colourFormatter.format(localisation.getMessage("player-not-known-to-alias"), ColourFormatter.FormatStyle.INFO, playerName));
 			return false;
 		} else {
 			return true;

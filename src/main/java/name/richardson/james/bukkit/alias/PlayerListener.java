@@ -30,7 +30,7 @@ import org.bukkit.plugin.PluginManager;
 import org.apache.commons.lang.Validate;
 
 import name.richardson.james.bukkit.utilities.listener.AbstractListener;
-import name.richardson.james.bukkit.utilities.logging.PrefixedLogger;
+import name.richardson.james.bukkit.utilities.logging.PluginLoggerFactory;
 
 import name.richardson.james.bukkit.alias.persistence.InetAddressRecord;
 import name.richardson.james.bukkit.alias.persistence.InetAddressRecordManager;
@@ -39,8 +39,7 @@ import name.richardson.james.bukkit.alias.persistence.PlayerNameRecordManager;
 
 public class PlayerListener extends AbstractListener {
 
-	private static final Logger LOGGER = PrefixedLogger.getLogger(PlayerListener.class);
-
+	private final Logger logger = PluginLoggerFactory.getLogger(PlayerListener.class);
 	private final InetAddressRecordManager inetAddressRecordManager;
 	private final PlayerNameRecordManager playerNameRecordManager;
 
@@ -54,7 +53,7 @@ public class PlayerListener extends AbstractListener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onPlayerLogin(final AsyncPlayerPreLoginEvent event) {
-		LOGGER.log(Level.FINE, "Received {0}", event.getClass().getSimpleName());
+		logger.log(Level.FINE, "Received {0}", event.getClass().getSimpleName());
 		PlayerNameRecord playerNameRecord = playerNameRecordManager.create(event.getName());
 		InetAddressRecord inetAddressRecord = inetAddressRecordManager.create(event.getAddress().getHostAddress());
 		final Timestamp now = new Timestamp(System.currentTimeMillis());

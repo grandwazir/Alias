@@ -25,17 +25,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.plugin.java.JavaPlugin;
+
 import name.richardson.james.bukkit.utilities.command.AbstractCommand;
 import name.richardson.james.bukkit.utilities.command.Command;
 import name.richardson.james.bukkit.utilities.command.HelpCommand;
 import name.richardson.james.bukkit.utilities.command.invoker.CommandInvoker;
 import name.richardson.james.bukkit.utilities.command.invoker.FallthroughCommandInvoker;
 import name.richardson.james.bukkit.utilities.command.matcher.Matcher;
-import name.richardson.james.bukkit.utilities.permissions.Permissions;
 import name.richardson.james.bukkit.utilities.persistence.configuration.PluginConfiguration;
 import name.richardson.james.bukkit.utilities.persistence.configuration.SimplePluginConfiguration;
-import name.richardson.james.bukkit.utilities.plugin.AbstractDatabasePlugin;
-import name.richardson.james.bukkit.utilities.plugin.AbstractPlugin;
 
 import name.richardson.james.bukkit.alias.persistence.InetAddressRecord;
 import name.richardson.james.bukkit.alias.persistence.InetAddressRecordManager;
@@ -43,19 +42,13 @@ import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
 import name.richardson.james.bukkit.alias.persistence.PlayerNameRecordManager;
 import name.richardson.james.bukkit.alias.utilities.command.matcher.PlayerNameRecordMatcher;
 
-@Permissions(permissions = {Alias.PLUGIN_PERMISSION})
-public class Alias extends AbstractDatabasePlugin {
+public class Alias extends JavaPlugin {
 
-	public static final String PLUGIN_PERMISSION = "alias";
+	public static final String CONFIG_NAME = "config.yml";
 
 	private PluginConfiguration configuration;
 	private InetAddressRecordManager inetAddressRecordManager;
 	private PlayerNameRecordManager playerNameRecordManager;
-
-	@Override
-	public String getArtifactId() {
-		return "alias";
-	}
 
 	@Override
 	public List<Class<?>> getDatabaseClasses() {
@@ -88,7 +81,7 @@ public class Alias extends AbstractDatabasePlugin {
 
 	protected void loadDatabase()
 	throws IOException {
-		super.loadDatabase();
+
 		this.playerNameRecordManager = new PlayerNameRecordManager(this.getDatabase());
 		this.inetAddressRecordManager = new InetAddressRecordManager(this.getDatabase());
 
@@ -96,7 +89,7 @@ public class Alias extends AbstractDatabasePlugin {
 
 	private void loadConfiguration()
 	throws IOException {
-		final File file = new File(this.getDataFolder().getPath() + File.separatorChar + AbstractPlugin.CONFIG_NAME);
+		final File file = new File(this.getDataFolder().getPath() + File.separatorChar + CONFIG_NAME);
 		final InputStream defaults = this.getResource(CONFIG_NAME);
 		this.configuration = new SimplePluginConfiguration(file, defaults);
 	}
@@ -106,15 +99,15 @@ public class Alias extends AbstractDatabasePlugin {
 		Matcher playerNameRecordMatcher = new PlayerNameRecordMatcher(getPlayerNameRecordManager());
 		// create the commands
 		Set<Command> commands = new HashSet<Command>();
-		AbstractCommand command = new CheckCommand(getPermissionManager(), getPlayerNameRecordManager());
+		AbstractCommand command = new CheckCommand(getPlayerNameRecordManager());
 		command.addMatcher(playerNameRecordMatcher);
 		commands.add(command);
-		command = new DeleteCommand(getPermissionManager(), getPlayerNameRecordManager());
+		command = new DeleteCommand(getPlayerNameRecordManager());
 		command.addMatcher(playerNameRecordMatcher);
 		command.addMatcher(playerNameRecordMatcher);
 		commands.add(command);
 		// create the invoker
-		command = new HelpCommand(getPermissionManager(), "as", getDescription(), commands);
+		command = new HelpCommand("as", commands);
 		CommandInvoker invoker = new FallthroughCommandInvoker(command);
 		invoker.addCommands(commands);
 		// bind invoker to plugin command
