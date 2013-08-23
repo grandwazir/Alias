@@ -1,5 +1,6 @@
 # Changelog for Alias (v1.4.0-SNAPSHOT)
 
+2013-08-23 16:23:41 +0100    fix multiple alias being returned (James Richardson)  
 2013-08-23 15:15:24 +0100    fix broken test (James Richardson)  
 2013-08-23 15:14:19 +0100    fix bug in finding names (James Richardson)  
 2013-08-23 15:05:06 +0100    quick clean up (James Richardson)  

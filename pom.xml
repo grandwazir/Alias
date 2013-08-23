@@ -54,8 +54,8 @@
                       <shadedPattern>name.richardson.james.bukkit.alias.utilities</shadedPattern>
                     </relocation>
                     <relocation>
-                        <pattern>org.mcstats.bukkit</pattern>
-                        <shadedPattern>name.richardson.james.bukkit.banhammer.utilities.metrics</shadedPattern>
+                        <pattern>org.mcstats</pattern>
+                        <shadedPattern>name.richardson.james.bukkit.alias.utilities.metrics</shadedPattern>
                     </relocation>
                   </relocations>
                   <minimizeJar>true</minimizeJar>
