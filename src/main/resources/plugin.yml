@@ -5,4 +5,14 @@ version: ${project.version}
 commands:
   as:
     description: 'Additional alias commands'
+permissions:
+  alias:
+    description: Allow access to all the features in Alias.
+    children:
+      alias.check: true
+      alias.delete: true
+  alias.check:
+    description: Allow a player to check what names another player has used
+  alias.delete:
+    description: Allow a player to delete associations between players
 
