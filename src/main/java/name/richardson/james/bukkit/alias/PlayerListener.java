@@ -57,7 +57,9 @@ public class PlayerListener extends AbstractListener {
 		PlayerNameRecord playerNameRecord = playerNameRecordManager.create(event.getName());
 		InetAddressRecord inetAddressRecord = inetAddressRecordManager.create(event.getAddress().getHostAddress());
 		final Timestamp now = new Timestamp(System.currentTimeMillis());
-		playerNameRecord.getAddresses().add(inetAddressRecord);
+		if (!playerNameRecord.getAddresses().contains(inetAddressRecord)) {
+			playerNameRecord.getAddresses().add(inetAddressRecord);
+		}
 		playerNameRecord.setLastSeen(now);
 		inetAddressRecord.setLastSeen(now);
 		playerNameRecordManager.save(playerNameRecord);

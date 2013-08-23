@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -33,6 +34,7 @@ import name.richardson.james.bukkit.utilities.command.HelpCommand;
 import name.richardson.james.bukkit.utilities.command.invoker.CommandInvoker;
 import name.richardson.james.bukkit.utilities.command.invoker.FallthroughCommandInvoker;
 import name.richardson.james.bukkit.utilities.command.matcher.Matcher;
+import name.richardson.james.bukkit.utilities.logging.PluginLoggerFactory;
 import name.richardson.james.bukkit.utilities.persistence.configuration.PluginConfiguration;
 import name.richardson.james.bukkit.utilities.persistence.configuration.SimplePluginConfiguration;
 import name.richardson.james.bukkit.utilities.persistence.database.DatabaseLoader;
@@ -54,6 +56,7 @@ public class Alias extends JavaPlugin {
 	private EbeanServer database;
 	private InetAddressRecordManager inetAddressRecordManager;
 	private PlayerNameRecordManager playerNameRecordManager;
+	private final Logger logger = PluginLoggerFactory.getLogger(Alias.class);
 
 	@Override
 	public List<Class<?>> getDatabaseClasses() {
@@ -92,6 +95,7 @@ public class Alias extends JavaPlugin {
 		final File file = new File(this.getDataFolder().getPath() + File.separatorChar + CONFIG_NAME);
 		final InputStream defaults = this.getResource(CONFIG_NAME);
 		this.configuration = new SimplePluginConfiguration(file, defaults);
+		this.logger.setLevel(configuration.getLogLevel());
 	}
 
 	private void loadDatabase()
