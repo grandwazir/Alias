@@ -19,6 +19,7 @@
 package name.richardson.james.bukkit.alias;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -82,7 +83,9 @@ public final class CheckCommand extends AbstractCommand {
 
 	private String[] getAliasesAsMessages() {
 		List<String> messages = new ArrayList<String>();
-		for (PlayerNameRecord record : playerRecord.getPlayerNameRecords()) {
+		Set<PlayerNameRecord> records = new HashSet<PlayerNameRecord>();
+		records.addAll(playerRecord.getPlayerNameRecords());
+		for (PlayerNameRecord record : records) {
 			String duration = timeFormatter.getHumanReadableDuration(record.getLastSeen().getTime());
 			messages.add(colourFormatter.format(localisation.getMessage(PLAYER_ALIAS_KEY), ColourFormatter.FormatStyle.INFO, record.getPlayerName(), duration));
 		}

@@ -40,8 +40,8 @@
                   <goal>shade</goal>
                 </goals>
                 <configuration>
-                    <shadedArtifactAttached>true</shadedArtifactAttached>
-                    <shadedClassifierName>shaded</shadedClassifierName>
+                   <shadedArtifactAttached>true</shadedArtifactAttached>
+                   <shadedClassifierName>shaded</shadedClassifierName>
                   <artifactSet>
                     <includes>
                       <include>name.richardson.james.bukkit:bukkit-utilities</include>

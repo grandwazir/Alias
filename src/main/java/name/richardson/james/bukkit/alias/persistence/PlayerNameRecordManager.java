@@ -61,7 +61,7 @@ public class PlayerNameRecordManager {
 	public PlayerNameRecord find(String playerName) {
 		logger.log(Level.FINER, "Attempting to find PlayerNameRecord matching {0}.", playerName);
 		Query<PlayerNameRecord> query = database.createQuery(PlayerNameRecord.class);
-		query.setParameter("playerName", playerName);
+		query.where().ieq("playerName", playerName);
 		return query.findUnique();
 	}
 
