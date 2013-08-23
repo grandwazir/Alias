@@ -29,8 +29,10 @@
   <build>
       <resources>
           <resource>
-              <directory>src/main/java</directory>
+              <directory>src/main/resources</directory>
+              <filtering>true</filtering>
               <includes>
+                  <include>*.yml</include>
                   <include>**/*.properties</include>
               </includes>
           </resource>
@@ -62,10 +64,11 @@
                       <shadedPattern>name.richardson.james.bukkit.alias.utilities</shadedPattern>
                     </relocation>
                     <relocation>
-                        <pattern>org.mcstats.bukkit</pattern>
+                        <pattern>org.mcstats</pattern>
                         <shadedPattern>name.richardson.james.bukkit.alias.utilities.metrics</shadedPattern>
                     </relocation>
                   </relocations>
+                  <minimizeJar>true</minimizeJar>
                 </configuration>
               </execution>
             </executions>

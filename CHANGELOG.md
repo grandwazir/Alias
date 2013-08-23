@@ -1,5 +1,8 @@
-# Changelog for Alias (v1.4.0-SNAPSHOT)
+# Changelog for Alias (v1.4.1-SNAPSHOT)
 
+
+**v1.4.0**  
+2013-08-23 18:39:26 +0100    actually start the updater (James Richardson)  
 2013-08-23 18:28:03 +0100    fix shading metrics (James Richardson)  
 2013-08-23 18:26:54 +0100    worked out how to do the shading finally (James Richardson)  
 2013-08-23 18:23:04 +0100    add resources for shared classes (James Richardson)  
