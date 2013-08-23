@@ -45,6 +45,7 @@
                       <shadedPattern>name.richardson.james.bukkit.alias.utilities</shadedPattern>
                     </relocation>
                   </relocations>
+                  <minimizeJar>true</minimizeJar>
                 </configuration>
               </execution>
             </executions>

@@ -40,6 +40,8 @@ import name.richardson.james.bukkit.utilities.persistence.configuration.SimplePl
 import name.richardson.james.bukkit.utilities.persistence.database.DatabaseLoader;
 import name.richardson.james.bukkit.utilities.persistence.database.DatabaseLoaderFactory;
 import name.richardson.james.bukkit.utilities.persistence.database.SimpleDatabaseConfiguration;
+import name.richardson.james.bukkit.utilities.updater.MavenPluginUpdater;
+import name.richardson.james.bukkit.utilities.updater.PluginUpdater;
 
 import name.richardson.james.bukkit.alias.persistence.InetAddressRecord;
 import name.richardson.james.bukkit.alias.persistence.InetAddressRecordManager;
@@ -81,13 +83,18 @@ public class Alias extends JavaPlugin {
 			this.loadDatabase();
 			this.registerCommands();
 			this.registerListeners();
+			this.setupMetrics();
+			this.updatePlugin();
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void checkOnlineMode() {
-
+	private void setupMetrics()
+	throws IOException {
+		if (configuration.isCollectingStats()) {
+			new MetricsListener(this);
+		}
 	}
 
 	private void loadConfiguration()
@@ -135,6 +142,13 @@ public class Alias extends JavaPlugin {
 		invoker.addCommands(commands);
 		// bind invoker to plugin command
 		getCommand("as").setExecutor(invoker);
+	}
+
+	private void updatePlugin() {
+		if (!configuration.getAutomaticUpdaterState().equals(PluginUpdater.State.OFF)) {
+			PluginUpdater updater = new MavenPluginUpdater("alias", "name.richardson.james.bukkit", getDescription(), configuration.getAutomaticUpdaterBranch(), configuration.getAutomaticUpdaterState());
+			new name.richardson.james.bukkit.utilities.updater.PlayerNotifier(this, this.getServer().getPluginManager(), updater);
+		}
 	}
 
 	private void registerListeners() {
