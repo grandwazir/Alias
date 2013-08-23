@@ -53,7 +53,7 @@
                   <artifactSet>
                     <includes>
                       <include>name.richardson.james.bukkit:bukkit-utilities</include>
-                      <include>org.mcstats:metrics</include>
+                      <include>org.mcstats.bukkit:metrics</include>
                     </includes>
                   </artifactSet>
                   <relocations>
@@ -62,7 +62,7 @@
                       <shadedPattern>name.richardson.james.bukkit.alias.utilities</shadedPattern>
                     </relocation>
                     <relocation>
-                        <pattern>org.mcstats</pattern>
+                        <pattern>org.mcstats.bukkit</pattern>
                         <shadedPattern>name.richardson.james.bukkit.alias.utilities.metrics</shadedPattern>
                     </relocation>
                   </relocations>
