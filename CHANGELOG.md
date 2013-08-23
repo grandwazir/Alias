@@ -1,5 +1,6 @@
 # Changelog for Alias (v1.4.2-SNAPSHOT)
 
+2013-08-23 22:57:17 +0100    I get no prizes for putting it in the test root by mistake (James Richardson)  
 
 **v1.4.1**  
 2013-08-23 19:05:49 +0100    add them back, it working seemed to have been a build mistake (James Richardson)  
