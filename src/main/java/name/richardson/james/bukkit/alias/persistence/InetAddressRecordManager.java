@@ -18,6 +18,7 @@
 
 package name.richardson.james.bukkit.alias.persistence;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +45,7 @@ public class InetAddressRecordManager {
 			logger.log(Level.FINER, "Creating new InetAddressRecord for {0}.", address);
 			record = new InetAddressRecord();
 			record.setAddress(address);
+			record.setLastSeen(new Timestamp(System.currentTimeMillis()));
 			save(record);
 			record = find(address);
 		}

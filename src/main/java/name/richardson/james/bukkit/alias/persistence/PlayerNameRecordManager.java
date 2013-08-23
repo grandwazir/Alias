@@ -18,6 +18,7 @@
 
 package name.richardson.james.bukkit.alias.persistence;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,6 +46,7 @@ public class PlayerNameRecordManager {
 			logger.log(Level.FINER, "Creating new PlayerNameRecord for {0}.", playerName);
 			record = new PlayerNameRecord();
 			record.setPlayerName(playerName);
+			record.setLastSeen(new Timestamp(System.currentTimeMillis()));
 			save(record);
 			record = find(playerName);
 		}
