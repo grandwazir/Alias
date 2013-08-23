@@ -67,7 +67,7 @@ public class DeleteCommandTest {
 	throws Exception {
 		PermissionManager permissionManager = mock(PermissionManager.class);
 		playerNameRecordManager = mock(PlayerNameRecordManager.class);
-		command = new DeleteCommand(permissionManager, playerNameRecordManager);
+		command = new DeleteCommand(playerNameRecordManager);
 		commandSender = mock(CommandSender.class);
 		commandContext = mock(CommandContext.class);
 		when(commandContext.getCommandSender()).thenReturn(commandSender);

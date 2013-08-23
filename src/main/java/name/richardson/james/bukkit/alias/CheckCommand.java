@@ -26,34 +26,35 @@ import org.bukkit.permissions.Permissible;
 
 import name.richardson.james.bukkit.utilities.command.AbstractCommand;
 import name.richardson.james.bukkit.utilities.command.context.CommandContext;
-import name.richardson.james.bukkit.utilities.formatters.ApproximateTimeFormatter;
-import name.richardson.james.bukkit.utilities.formatters.ColourFormatter;
-import name.richardson.james.bukkit.utilities.formatters.DefaultColourFormatter;
-import name.richardson.james.bukkit.utilities.formatters.TimeFormatter;
+import name.richardson.james.bukkit.utilities.formatters.*;
 import name.richardson.james.bukkit.utilities.localisation.Localisation;
 import name.richardson.james.bukkit.utilities.localisation.ResourceBundleByClassLocalisation;
 
 import name.richardson.james.bukkit.alias.persistence.PlayerNameRecord;
 import name.richardson.james.bukkit.alias.persistence.PlayerNameRecordManager;
+import name.richardson.james.bukkit.alias.utilities.formatters.AliasCountChoiceFormatter;
 
 public final class CheckCommand extends AbstractCommand {
 
 	public static final String PERMISSION_ALL = "alias.check";
 
+	private static final String NO_PERMISSION_KEY = "no-permission";
+	private static final String PLAYER_ALIAS_KEY = "player-alias";
+	private static final String PLAYER_NOT_KNOWN_TO_ALIAS_KEY = "player-not-known-to-alias";
+
 	private final ColourFormatter colourFormatter = new DefaultColourFormatter();
 	private final Localisation localisation = new ResourceBundleByClassLocalisation(CheckCommand.class);
 	private final PlayerNameRecordManager playerNameRecordManager;
 	private final TimeFormatter timeFormatter = new ApproximateTimeFormatter();
+	private final ChoiceFormatter choiceFormatter = new AliasCountChoiceFormatter();
 
 	private String playerName;
 	private PlayerNameRecord playerRecord;
 
 	public CheckCommand(PlayerNameRecordManager playerNameRecordManager) {
 		this.playerNameRecordManager = playerNameRecordManager;
-//		this.choiceFormatter = new LocalisedChoiceFormatter();
-//		this.choiceFormatter.setMessage("checked-aliases-header");
-//		this.choiceFormatter.setFormats("one-alias", "many-aliases");
-//		this.choiceFormatter.setLimits(1,2);
+		this.choiceFormatter.setMessage(colourFormatter.format(localisation.getMessage("checked-aliases-header"), ColourFormatter.FormatStyle.HEADER));
+
 	}
 
 	@Override
@@ -62,11 +63,11 @@ public final class CheckCommand extends AbstractCommand {
 			setPlayerName(context);
 			if (!setPlayerRecord(context)) return;
 			Set<String> aliases = playerRecord.getAliases();
-//			choiceFormatter.setArguments(aliases.size(), this.playerName);
-//			context.getCommandSender().sendMessage(choiceFormatter.getColouredMessage(ColourScheme.Style.HEADER));
+			choiceFormatter.setArguments(aliases.size(), this.playerName);
+			context.getCommandSender().sendMessage(choiceFormatter.getMessage());
 			context.getCommandSender().sendMessage(getAliasesAsMessages());
 		} else {
-			context.getCommandSender().sendMessage(colourFormatter.format(localisation.getMessage("no-permission"), ColourFormatter.FormatStyle.ERROR));
+			context.getCommandSender().sendMessage(colourFormatter.format(localisation.getMessage(NO_PERMISSION_KEY), ColourFormatter.FormatStyle.ERROR));
 		}
 	}
 
@@ -83,7 +84,7 @@ public final class CheckCommand extends AbstractCommand {
 		List<String> messages = new ArrayList<String>();
 		for (PlayerNameRecord record : playerRecord.getPlayerNameRecords()) {
 			String duration = timeFormatter.getHumanReadableDuration(record.getLastSeen().getTime());
-			messages.add(colourFormatter.format(localisation.getMessage("player-alias"), ColourFormatter.FormatStyle.INFO, record.getPlayerName(), duration));
+			messages.add(colourFormatter.format(localisation.getMessage(PLAYER_ALIAS_KEY), ColourFormatter.FormatStyle.INFO, record.getPlayerName(), duration));
 		}
 		return messages.toArray(new String[messages.size()]);
 	}
@@ -100,7 +101,7 @@ public final class CheckCommand extends AbstractCommand {
 	private boolean setPlayerRecord(CommandContext context) {
 		playerRecord = playerNameRecordManager.find(playerName);
 		if (playerRecord == null) {
-			context.getCommandSender().sendMessage(colourFormatter.format(localisation.getMessage("player-not-known-to-alias"), ColourFormatter.FormatStyle.INFO, playerName));
+			context.getCommandSender().sendMessage(colourFormatter.format(localisation.getMessage(PLAYER_NOT_KNOWN_TO_ALIAS_KEY), ColourFormatter.FormatStyle.INFO, playerName));
 			return false;
 		} else {
 			return true;

@@ -58,9 +58,8 @@ public class CheckCommandTest {
 	@Before
 	public void setUp()
 	throws Exception {
-		PermissionManager permissionManager = mock(PermissionManager.class);
 		playerNameRecordManager = mock(PlayerNameRecordManager.class);
-		command = new CheckCommand(permissionManager, playerNameRecordManager);
+		command = new CheckCommand(playerNameRecordManager);
 		commandSender = mock(CommandSender.class);
 		commandContext = mock(CommandContext.class);
 		when(commandContext.getCommandSender()).thenReturn(commandSender);

@@ -60,12 +60,6 @@ public class AliasTest {
 		Assert.assertTrue("Database classes should include InetAddressRecord!", plugin.getDatabaseClasses().contains(InetAddressRecord.class));
 	}
 
-	@Test
-	public void testGetArtifactID()
-	throws Exception {
-		Assert.assertEquals("alias", plugin.getArtifactId());
-	}
-
 	@Before
 	public void setUp()
 	throws Exception {
