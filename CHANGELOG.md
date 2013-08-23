@@ -1,5 +1,8 @@
-# Changelog for Alias (v1.4.1-SNAPSHOT)
+# Changelog for Alias (v1.4.2-SNAPSHOT)
 
+
+**v1.4.1**  
+2013-08-23 19:05:49 +0100    add them back, it working seemed to have been a build mistake (James Richardson)  
 
 **v1.4.0**  
 2013-08-23 18:39:26 +0100    actually start the updater (James Richardson)  
