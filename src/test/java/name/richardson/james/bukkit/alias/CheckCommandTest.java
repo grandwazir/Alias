@@ -16,9 +16,7 @@ import name.richardson.james.bukkit.alias.persistence.PlayerNameRecordManager;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class CheckCommandTest {
 
@@ -32,19 +30,19 @@ public class CheckCommandTest {
 	throws Exception {
 		command.execute(commandContext);
 		verify(playerNameRecordManager).find("frank");
-		verify(commandSender).sendMessage("§a§bfrank§a has no known aliases.");
+		verify(commandSender).sendMessage("§a§bfrank§a is not known to Alias.");
 	}
 
 	@Test
 	public void testNoPermission() {
 		when(commandSender.hasPermission(anyString())).thenReturn(false);
 		command.execute(commandContext);
-		verify(commandSender).sendMessage("§cYou are not allowed to do that.");
+		verify(commandSender).sendMessage("§cYou are not allowed to check for Aliases.");
 	}
 
 	@Test
 	public void testExecute() {
-		PlayerNameRecord playerNameRecord = mock(PlayerNameRecord.class);
+		PlayerNameRecord playerNameRecord = mock(PlayerNameRecord.class, RETURNS_MOCKS);
 		when(playerNameRecord.getPlayerNameRecords()).thenReturn(Arrays.asList(playerNameRecord));
 		when(playerNameRecordManager.find("joe")).thenReturn(playerNameRecord);
 		when(commandContext.has(anyInt())).thenReturn(true);

@@ -26,7 +26,7 @@ public class DeleteCommandTest {
 	throws Exception {
 		permitAccess();
 		command.execute(commandContext);
-		verify(commandSender).sendMessage("§cYou must specify two player names!");
+		verify(commandSender).sendMessage("§cYou must specify two player names.");
 	}
 
 	@Test
@@ -36,13 +36,13 @@ public class DeleteCommandTest {
 		when(commandContext.getString(anyInt())).thenReturn("frank");
 		command.execute(commandContext);
 		verify(playerNameRecordManager, times(2)).find("frank");
-		verify(commandSender).sendMessage("§eThose players are not known to Alias.");
+		verify(commandSender).sendMessage("§aThose players are not known to Alias.");
 	}
 
 	@Test
 	public void testNoPermission() {
 		command.execute(commandContext);
-		verify(commandSender).sendMessage("§cYou are not allowed to do that.");
+		verify(commandSender).sendMessage("§cYou do not have permission to delete aliases.");
 	}
 
 	@Test
@@ -55,7 +55,7 @@ public class DeleteCommandTest {
 		command.execute(commandContext);
 		verify(playerNameRecordManager, times(2)).find("frank");
 		verify(playerNameRecord).removeAssociation(playerNameRecord);
-		verify(commandSender).sendMessage("§aDisassociated §bfrank§a from §bfrank§a.");
+		verify(commandSender).sendMessage("§a§bfrank§a is no longer associated with §bfrank§a.");
 	}
 
 	private void permitAccess() {

@@ -20,12 +20,12 @@ package name.richardson.james.bukkit.alias;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.config.ServerConfig;
 
 import name.richardson.james.bukkit.utilities.command.AbstractCommand;
 import name.richardson.james.bukkit.utilities.command.Command;
@@ -35,6 +35,9 @@ import name.richardson.james.bukkit.utilities.command.invoker.FallthroughCommand
 import name.richardson.james.bukkit.utilities.command.matcher.Matcher;
 import name.richardson.james.bukkit.utilities.persistence.configuration.PluginConfiguration;
 import name.richardson.james.bukkit.utilities.persistence.configuration.SimplePluginConfiguration;
+import name.richardson.james.bukkit.utilities.persistence.database.DatabaseLoader;
+import name.richardson.james.bukkit.utilities.persistence.database.DatabaseLoaderFactory;
+import name.richardson.james.bukkit.utilities.persistence.database.SimpleDatabaseConfiguration;
 
 import name.richardson.james.bukkit.alias.persistence.InetAddressRecord;
 import name.richardson.james.bukkit.alias.persistence.InetAddressRecordManager;
@@ -44,9 +47,11 @@ import name.richardson.james.bukkit.alias.utilities.command.matcher.PlayerNameRe
 
 public class Alias extends JavaPlugin {
 
-	public static final String CONFIG_NAME = "config.yml";
+	private static final String CONFIG_NAME = "config.yml";
+	private static final String DATABASE_CONFIG_NAME = "database.yml";
 
 	private PluginConfiguration configuration;
+	private EbeanServer database;
 	private InetAddressRecordManager inetAddressRecordManager;
 	private PlayerNameRecordManager playerNameRecordManager;
 
@@ -69,7 +74,6 @@ public class Alias extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		try {
-			super.onEnable();
 			this.loadConfiguration();
 			this.loadDatabase();
 			this.registerCommands();
@@ -79,11 +83,7 @@ public class Alias extends JavaPlugin {
 		}
 	}
 
-	protected void loadDatabase()
-	throws IOException {
-
-		this.playerNameRecordManager = new PlayerNameRecordManager(this.getDatabase());
-		this.inetAddressRecordManager = new InetAddressRecordManager(this.getDatabase());
+	private void checkOnlineMode() {
 
 	}
 
@@ -92,6 +92,25 @@ public class Alias extends JavaPlugin {
 		final File file = new File(this.getDataFolder().getPath() + File.separatorChar + CONFIG_NAME);
 		final InputStream defaults = this.getResource(CONFIG_NAME);
 		this.configuration = new SimplePluginConfiguration(file, defaults);
+	}
+
+	private void loadDatabase()
+	throws IOException {
+		ServerConfig serverConfig = new ServerConfig();
+		getServer().configureDbConfig(serverConfig);
+		serverConfig.setClasses(Arrays.asList(PlayerNameRecord.class, InetAddressRecord.class));
+		final File file = new File(this.getDataFolder().getPath() + File.separatorChar + DATABASE_CONFIG_NAME);
+		final InputStream defaults = this.getResource(DATABASE_CONFIG_NAME);
+		final SimpleDatabaseConfiguration configuration = new SimpleDatabaseConfiguration(file, defaults, this.getName(), serverConfig);
+		final DatabaseLoader loader = DatabaseLoaderFactory.getDatabaseLoader(configuration);
+		loader.initalise();
+		this.database = loader.getEbeanServer();
+		this.playerNameRecordManager = new PlayerNameRecordManager(this.getDatabase());
+		this.inetAddressRecordManager = new InetAddressRecordManager(this.getDatabase());
+	}
+
+	public EbeanServer getDatabase() {
+		return database;
 	}
 
 	private void registerCommands() {

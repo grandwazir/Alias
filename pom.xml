@@ -3,7 +3,7 @@
   <artifactId>alias</artifactId>
   <version>1.4.0-SNAPSHOT</version>
   <name>Alias</name>
-  <description>A plugin for Bukkit that associates an IP address with player names.</description>
+  <description>Associates IP addresses with player names</description>
 
   <parent>
      <groupId>name.richardson.james.bukkit</groupId>
@@ -45,7 +45,6 @@
                       <shadedPattern>name.richardson.james.bukkit.alias.utilities</shadedPattern>
                     </relocation>
                   </relocations>
-                  <minimizeJar>true</minimizeJar>
                 </configuration>
               </execution>
             </executions>

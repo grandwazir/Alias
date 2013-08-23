@@ -37,7 +37,7 @@ public final class DeleteCommand extends AbstractCommand {
 	private static final String DISASSOCIATED_PLAYER_KEY = "disassociated-player";
 	private static final String NO_PERMISSION_KEY = "no-permission";
 	private static final String MUST_SPECIFY_PLAYER_NAMES_KEY = "must-specify-player-names";
-	private static final String PLAYER_NOT_KNOWN_TO_ALIAS_KEY = "player-not-known-to-alias";
+	private static final String PLAYERS_NOT_KNOWN_TO_ALIAS_KEY = "players-not-known-to-alias";
 
 	private final PlayerNameRecordManager playerNameRecordManager;
 	private final ColourFormatter colourFormatter = new DefaultColourFormatter();
@@ -89,7 +89,7 @@ public final class DeleteCommand extends AbstractCommand {
 		playerRecord = playerNameRecordManager.find(playerName);
 		targetRecord = playerNameRecordManager.find(targetName);
 		if (playerRecord == null || targetRecord == null) {
-			context.getCommandSender().sendMessage(colourFormatter.format(localisation.getMessage(PLAYER_NOT_KNOWN_TO_ALIAS_KEY), ColourFormatter.FormatStyle.INFO, playerName));
+			context.getCommandSender().sendMessage(colourFormatter.format(localisation.getMessage(PLAYERS_NOT_KNOWN_TO_ALIAS_KEY), ColourFormatter.FormatStyle.INFO));
 			return false;
 		} else {
 			return true;
