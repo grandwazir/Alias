@@ -26,7 +26,6 @@ import com.avaje.ebean.validation.NotNull;
 
 @Entity
 @Table(name = "alias_addresses")
-@CacheStrategy(readOnly = false, useBeanCache = true, warmingQuery ="order by id")
 public class InetAddressRecord {
 
 	@NotNull

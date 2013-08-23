@@ -26,7 +26,6 @@ import com.avaje.ebean.validation.NotNull;
 
 @Entity
 @Table(name = "alias_players")
-@CacheStrategy(readOnly = false, useBeanCache = true, warmingQuery ="order by id")
 public class PlayerNameRecord {
 
 	private List<InetAddressRecord> addresses;
