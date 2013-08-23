@@ -51,7 +51,7 @@ public class PlayerNameRecordManagerTest {
 		PlayerNameRecord record = getMockPlayerNameRecord();
 		when(query.findUnique()).thenReturn(record);
 		Assert.assertEquals("Record should be the same!", record, manager.find("frank"));
-		verify(query).setParameter("name", "frank");
+		verify(query).setParameter("playerName", "frank");
 		verify(query, times(1)).findUnique();
 	}
 
