@@ -16,7 +16,7 @@
      <dependency>
            <groupId>name.richardson.james.bukkit</groupId>
            <artifactId>bukkit-utilities</artifactId>
-           <version>6.1.0-SNAPSHOT</version>
+           <version>6.0.2</version>
      </dependency>
       <dependency>
           <groupId>org.mcstats.bukkit</groupId>
@@ -45,7 +45,7 @@
                   <artifactSet>
                     <includes>
                       <include>name.richardson.james.bukkit:bukkit-utilities</include>
-                      <include>org.mcstats.bukkit:metrics</include>
+                      <include>org.mcstats:metrics</include>
                     </includes>
                   </artifactSet>
                   <relocations>
@@ -58,7 +58,6 @@
                         <shadedPattern>name.richardson.james.bukkit.alias.utilities.metrics</shadedPattern>
                     </relocation>
                   </relocations>
-                  <minimizeJar>true</minimizeJar>
                 </configuration>
               </execution>
             </executions>
