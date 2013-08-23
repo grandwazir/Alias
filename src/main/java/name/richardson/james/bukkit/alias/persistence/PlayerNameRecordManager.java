@@ -72,7 +72,7 @@ public class PlayerNameRecordManager {
 	public List<PlayerNameRecord> list(String playerName) {
 		logger.log(Level.FINER, "Listing all PlayerNameRecords starting with '{0}'.", playerName);
 		Query<PlayerNameRecord> query = database.createQuery(PlayerNameRecord.class);
-		query.where().istartsWith("name", playerName);
+		query.where().istartsWith("playerName", playerName);
 		return query.findList();
 	}
 
