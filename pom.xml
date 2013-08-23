@@ -20,13 +20,21 @@
      </dependency>
       <dependency>
           <groupId>org.mcstats.bukkit</groupId>
-          <artifactId>metrics-lite</artifactId>
+          <artifactId>metrics</artifactId>
           <version>R6</version>
           <scope>compile</scope>
       </dependency>
   </dependencies>
 
   <build>
+      <resources>
+          <resource>
+              <directory>src/main/java</directory>
+              <includes>
+                  <include>**/*.properties</include>
+              </includes>
+          </resource>
+      </resources>
       <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>

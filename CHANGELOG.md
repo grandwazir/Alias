@@ -1,5 +1,6 @@
 # Changelog for Alias (v1.4.0-SNAPSHOT)
 
+2013-08-23 18:23:04 +0100    add resources for shared classes (James Richardson)  
 2013-08-23 17:26:21 +0100    shade metrics correctly (James Richardson)  
 2013-08-23 16:23:41 +0100    fix multiple alias being returned (James Richardson)  
 2013-08-23 15:15:24 +0100    fix broken test (James Richardson)  
