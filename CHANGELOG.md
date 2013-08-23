@@ -1,5 +1,7 @@
 # Changelog for Alias (v1.4.0-SNAPSHOT)
 
+2013-08-23 15:05:06 +0100    quick clean up (James Richardson)  
+2013-08-23 15:04:40 +0100    remove level 2 cache since it causes problems (James Richardson)  
 2013-08-23 15:02:21 +0100    upload shaded jar to repository seperately (James Richardson)  
 2013-08-23 15:00:37 +0100    add metrics as shaded dependency (James Richardson)  
 2013-08-23 14:59:25 +0100    add metrics (James Richardson)  
