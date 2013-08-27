@@ -1,5 +1,10 @@
-# Changelog for Alias (v1.4.2-SNAPSHOT)
+# Changelog for Alias (v1.4.3-SNAPSHOT)
 
+2013-08-27 21:51:47 +0100    bump version to fix localisation issues (James Richardson)  
+2013-08-27 21:51:25 +0100    add missing localisation file (James Richardson)  
+
+**v1.4.2**  
+2013-08-23 23:00:51 +0100    prepare for release (James Richardson)  
 2013-08-23 22:57:17 +0100    I get no prizes for putting it in the test root by mistake (James Richardson)  
 
 **v1.4.1**  
