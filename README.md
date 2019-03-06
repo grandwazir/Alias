@@ -1,7 +1,7 @@
 Alias - easily track a log your player's IP addresses.
 ====================================
 
-Alias is a plugin for the Minecraft wrapper [Bukkit](http://bukkit.org/) that allows adminstrators and other trusted users to check the IP addresses of players on your server. Additionally it also links every username with an IP address which is useful if you suspect that one user is masqerading as another.
+Alias is a plugin for the Minecraft wrapper [Bukkit](http://bukkit.org/) that allows administrators and other trusted users to check the IP addresses of players on your server. Additionally it also links every username with an IP address which is useful if you suspect that one user is masquerading as another.
 
 ## Features
 
